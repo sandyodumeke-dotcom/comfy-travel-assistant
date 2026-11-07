@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Comfy Travel Assistant</string>
+    <string name="sc_leave_short">Leaving check</string>
+    <string name="sc_leave_long">I am leaving. Check everything</string>
+    <string name="sc_add_short">Add item</string>
+    <string name="sc_add_long">Add an item to my list</string>
+</resources>

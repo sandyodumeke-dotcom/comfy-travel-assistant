@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b1b33"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><title>Comfy Travel Assistant</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b1b33;--bg2:#12294a;--card:#f7f3ec;--ink:#14213a;--mut:#6b7690;--amber:#ffb547;--teal:#3dd6c3;--rose:#ff6f91;--line:rgba(255,255,255,.12)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Sora',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:#fff;min-height:100vh;padding-bottom:90px}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0}
+:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.hero{position:relative;overflow:hidden;padding:34px 20px 70px;background:linear-gradient(180deg,#0b1b33 0%,#1c2f63 55%,#c2557a 85%,#ffb547 100%)}
+.stars{position:absolute;inset:0;background-image:radial-gradient(1.5px 1.5px at 20% 30%,#fff,transparent),radial-gradient(1px 1px at 70% 20%,#fff,transparent),radial-gradient(1.5px 1.5px at 85% 55%,#fff,transparent),radial-gradient(1px 1px at 40% 60%,#fff,transparent),radial-gradient(1px 1px at 10% 70%,#fff,transparent);opacity:.7}
+.plane{position:absolute;right:-10px;top:26px;font-size:54px;transform:rotate(-12deg);animation:fly 9s ease-in-out infinite;filter:drop-shadow(0 8px 12px rgba(0,0,0,.35))}
+@keyframes fly{0%,100%{transform:translate(0,0) rotate(-12deg)}50%{transform:translate(-18px,-8px) rotate(-8deg)}}
+.wrap{max-width:760px;margin:0 auto;position:relative}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:15px;letter-spacing:.3px}
+.brand i{width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,var(--amber),var(--rose));display:grid;place-items:center;font-style:normal}
+h1{font-size:clamp(28px,7vw,44px);line-height:1.1;margin:26px 0 8px;font-weight:800;max-width:14em}
+.sub{color:#dbe4ff;max-width:30em;font-size:14px;line-height:1.6}
+.count{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+.cd{background:rgba(255,255,255,.14);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:16px;padding:10px 16px;min-width:74px;text-align:center}
+.cd b{display:block;font-size:24px}.cd span{font-size:11px;color:#dbe4ff}
+.tripbtn{align-self:center;background:rgba(255,255,255,.18);padding:12px 16px;border-radius:16px;font-size:13px;font-weight:600;border:1px dashed rgba(255,255,255,.5)}
+main{max-width:760px;margin:-40px auto 0;padding:0 16px;position:relative}
+.panel{background:var(--bg2);border:1px solid var(--line);border-radius:24px;padding:20px;margin-bottom:18px;box-shadow:0 20px 40px rgba(0,0,0,.3)}
+.panel h2{font-size:17px;margin-bottom:14px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;margin-bottom:6px;scrollbar-width:none}
+.chip{flex:none;background:rgba(61,214,195,.12);color:var(--teal);border:1px solid rgba(61,214,195,.35);padding:8px 13px;border-radius:99px;font-size:13px}
+.chip:active{transform:scale(.95)}
+.f{display:grid;gap:10px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.in{width:100%;background:rgba(255,255,255,.08);border:1px solid var(--line);border-radius:14px;padding:14px;color:#fff;color-scheme:dark}
+.in::placeholder{color:#9fb0d6}
+select.in option{color:#000}
+.go{background:linear-gradient(135deg,var(--amber),#ff8a5b);color:#2a1500;font-weight:800;padding:15px;border-radius:16px;font-size:15px;box-shadow:0 10px 24px rgba(255,138,91,.35)}
+.go:active{transform:scale(.98)}
+.bar{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+.tabs{display:flex;gap:6px;background:rgba(255,255,255,.07);padding:4px;border-radius:14px}
+.tab{background:none;padding:8px 12px;border-radius:10px;font-size:13px;color:#b8c5e6}
+.tab.on{background:var(--amber);color:#2a1500;font-weight:700}
+.prog{height:8px;background:rgba(255,255,255,.1);border-radius:9px;overflow:hidden;margin:4px 0 16px}
+.prog div{height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--amber));transition:width .5s}
+.bulk{display:none;position:sticky;top:8px;z-index:5;background:#fff;color:var(--ink);border-radius:16px;padding:10px 12px;gap:8px;align-items:center;margin-bottom:12px;box-shadow:0 10px 30px rgba(0,0,0,.35);flex-wrap:wrap}
+.bulk.show{display:flex}.bulk b{flex:1;font-size:13px}
+.bulk button{padding:9px 12px;border-radius:11px;font-size:13px;font-weight:700}
+.tk{position:relative;display:flex;background:var(--card);color:var(--ink);border-radius:18px;margin-bottom:14px;overflow:hidden;transition:.25s}
+.tk::before,.tk::after{content:"";position:absolute;right:92px;width:20px;height:20px;border-radius:50%;background:var(--bg2);z-index:1}
+.tk::before{top:-10px}.tk::after{bottom:-10px}
+.tk.sel{box-shadow:0 0 0 3px var(--teal)}
+.tk.cancelled,.tk.done{opacity:.6}
+.tk.cancelled .tt{text-decoration:line-through}
+.main{flex:1;padding:16px 14px 16px 16px;display:flex;gap:12px;align-items:flex-start;min-width:0}
+.main input[type=checkbox]{width:22px;height:22px;accent-color:#0f9d8f;margin-top:2px;flex:none}
+.ic{font-size:26px;flex:none}
+.tt{font-weight:700;font-size:16px;word-break:break-word}
+.meta{font-size:12px;color:var(--mut);margin-top:4px;line-height:1.5}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:9px;margin-top:6px;background:#e5f7f4;color:#0b7a6e}
+.tag.over{background:#ffe3ea;color:#c2254d}.tag.cancelled{background:#e8e8ee;color:#555}.tag.done{background:#e1f4dc;color:#2a7a1c}
+.stub{width:92px;border-left:2px dashed #c9c2b3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:8px;flex:none}
+.stub button{width:100%;background:#eef0f6;color:var(--ink);border-radius:10px;padding:7px 4px;font-size:12px;font-weight:700}
+.stub .x{background:#ffe3ea;color:#c2254d}
+.empty{text-align:center;padding:34px 10px;color:#b8c5e6;font-size:14px;line-height:1.7}.empty big{font-size:44px;display:block;margin-bottom:6px}
+.set{display:grid;gap:12px}
+.set label{font-size:13px;color:#b8c5e6;display:grid;gap:6px}
+.set input[type=range]{accent-color:var(--amber)}
+.ghost{background:rgba(255,255,255,.1);padding:12px;border-radius:14px;font-weight:600;font-size:14px}
+.unlock{background:rgba(255,181,71,.16);border:1px solid var(--amber);color:#ffe2ae;border-radius:16px;padding:12px 14px;font-size:13px;margin-bottom:16px;display:flex;gap:10px;align-items:center;justify-content:space-between}
+.unlock button{background:var(--amber);color:#2a1500;padding:9px 14px;border-radius:11px;font-weight:700;flex:none}
+.modal{position:fixed;inset:0;background:rgba(5,10,25,.75);backdrop-filter:blur(6px);display:none;place-items:center;padding:20px;z-index:50}
+.modal.show{display:grid}
+.al{background:var(--card);color:var(--ink);border-radius:28px;padding:28px 22px;max-width:380px;width:100%;text-align:center}
+.pulse{width:84px;height:84px;margin:0 auto 14px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--rose));display:grid;place-items:center;font-size:38px;animation:pl 1.4s infinite}
+@keyframes pl{0%{box-shadow:0 0 0 0 rgba(255,111,145,.6)}100%{box-shadow:0 0 0 28px rgba(255,111,145,0)}}
+.al h3{font-size:22px;margin-bottom:6px}.al p{color:var(--mut);font-size:14px;margin-bottom:18px}
+.al .btns{display:grid;gap:8px}
+.al button{padding:13px;border-radius:14px;font-weight:700;font-size:14px}
+.b1{background:#0f9d8f;color:#fff}.b2{background:#eef0f6;color:var(--ink)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,120px);background:#fff;color:var(--ink);padding:12px 18px;border-radius:14px;font-size:13px;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.4);transition:.3s;z-index:60;max-width:90vw}
+.toast.show{transform:translate(-50%,0)}
+@media(max-width:420px){.row{grid-template-columns:1fr}.stub{width:78px}.tk::before,.tk::after{right:68px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+body{padding-bottom:120px}
+.toast{bottom:96px}
+.nav{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;gap:4px;padding:6px;background:rgba(18,41,74,.88);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:24px;z-index:40;box-shadow:0 14px 34px rgba(0,0,0,.4)}
+.nav button{background:none;color:#b8c5e6;padding:9px 18px;border-radius:18px;font-size:12px;font-weight:600;display:grid;gap:2px;justify-items:center;min-width:78px}
+.nav button span{font-size:19px}
+.nav button.on{background:var(--amber);color:#2a1500}
+.nav .plus{background:linear-gradient(135deg,var(--teal),#2aa6c9);color:#04222b}
+.shead{padding:34px 20px 64px;background:linear-gradient(160deg,#0b1b33,#1c2f63 60%,#7a4a8a)}
+.spage{max-width:760px;margin:-36px auto 0;padding:0 16px}
+.tg{display:flex!important;justify-content:space-between;align-items:center;font-size:14px!important}
+.sw{appearance:none;-webkit-appearance:none;width:52px;height:30px;border-radius:99px;background:#5b6a8c;position:relative;flex:none;cursor:pointer;transition:.25s;border:0}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:.25s}
+.sw:checked{background:var(--teal)}.sw:checked::after{transform:translateX(22px)}
+.note{font-size:13px;line-height:1.6;color:#b8c5e6}
+.foot{text-align:center;color:#8fa0c8;font-size:12px;padding:6px 0 18px}
+.tab small{opacity:.7;margin-left:2px}
+body[data-view=settings] .hero,body[data-view=settings] main{display:none}
+body:not([data-view=settings]) #settings{display:none}
+html[data-theme=light]{--bg:#e9eff9;--bg2:#fff;--card:#f1f5fc;--mut:#5d6985}
+html[data-theme=light] body{color:#14213a}
+html[data-theme=light] .panel{border-color:#dbe3f2;box-shadow:0 14px 30px rgba(30,50,100,.12)}
+html[data-theme=light] .in{background:#f1f5fc;color:#14213a;border-color:#d5dded;color-scheme:light}
+html[data-theme=light] .in::placeholder{color:#7a86a3}
+html[data-theme=light] .tabs{background:#e9eff9}
+html[data-theme=light] .tab{color:#4a5a7d}
+html[data-theme=light] .tab.on{color:#2a1500}
+html[data-theme=light] .set label,html[data-theme=light] .note,html[data-theme=light] .empty{color:#4a5a7d}
+html[data-theme=light] .ghost{background:#e9eff9;color:#14213a}
+html[data-theme=light] .chip{background:#e1f7f4;color:#0b7a6e}
+html[data-theme=light] .prog{background:#dbe3f2}
+html[data-theme=light] .unlock{background:#fff3dc;color:#7a4a00}
+html[data-theme=light] .nav{background:rgba(255,255,255,.9)}
+html[data-theme=light] .nav button{color:#4a5a7d}
+html[data-theme=light] .nav button.on{color:#2a1500}
+html[data-theme=light] .nav .plus{color:#04222b}
+html[data-theme=light] .tk{border:1px solid #e0e7f5;box-shadow:0 4px 14px rgba(30,50,100,.1)}
+
+.addrow{display:flex;gap:8px}.addrow .in{flex:1;min-width:0;font-size:16px}
+.mic,.plus2{flex:none;width:52px;border-radius:14px;font-size:22px;display:grid;place-items:center}
+.mic{background:rgba(255,255,255,.1)}.mic.rec{background:var(--rose);animation:pl 1s infinite}
+.plus2{background:linear-gradient(135deg,var(--amber),#ff8a5b);color:#2a1500;font-weight:800;font-size:26px;box-shadow:0 8px 20px rgba(255,138,91,.35);transition:transform .2s}
+.plus2:active{transform:scale(.9) rotate(90deg)}
+.when{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:16px;padding:12px;display:grid;gap:10px}
+.when b{font-size:13px;color:#b8c5e6}
+.presets{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.presets button{flex:none;background:rgba(255,181,71,.14);color:var(--amber);border:1px solid rgba(255,181,71,.35);padding:7px 12px;border-radius:99px;font-size:12px;font-weight:600}
+.more summary{cursor:pointer;font-size:13px;color:#b8c5e6;padding:4px 2px}.more .row{margin-top:10px}
+.ghost2{background:none;color:var(--teal);font-size:13px;font-weight:600;padding:4px;text-align:left}
+.banner{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:14px;padding:10px 12px;font-size:13px;margin-bottom:12px;line-height:1.5}
+.banner span:last-of-type{flex:1}.banner button{background:rgba(255,255,255,.14);padding:7px 12px;border-radius:10px;font-size:12px;font-weight:700}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--teal);animation:pl2 1.8s infinite;flex:none}
+@keyframes pl2{0%{box-shadow:0 0 0 0 rgba(61,214,195,.7)}100%{box-shadow:0 0 0 12px rgba(61,214,195,0)}}
+.start{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:41;display:none;align-items:center;justify-content:center;width:min(92vw,420px);padding:15px 18px;border-radius:18px;background:linear-gradient(135deg,var(--teal),#2aa6c9);color:#04222b;font-weight:800;font-size:15px;box-shadow:0 14px 34px rgba(42,166,201,.45);animation:breathe 2.6s ease-in-out infinite}
+@keyframes breathe{50%{transform:translateX(-50%) scale(1.03)}}
+body[data-view=settings] .start{display:none!important}
+.tabs{overflow-x:auto;max-width:100%;scrollbar-width:none}.tab{white-space:nowrap}
+.tag.draft{background:#fff1d6;color:#8a5a00}
+.tk.pop{animation:pop .5s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{transform:scale(.85) translateY(-10px);opacity:0}}
+.stars{animation:tw 4s ease-in-out infinite alternate}@keyframes tw{from{opacity:.35}to{opacity:.85}}
+.cloud{position:absolute;height:26px;width:90px;border-radius:30px;background:rgba(255,255,255,.18);filter:blur(2px);animation:drift 40s linear infinite}
+.cloud.c2{top:130px;width:130px;animation-duration:60s;animation-delay:-20s;opacity:.7}
+@keyframes drift{from{transform:translateX(-160px)}to{transform:translateX(900px)}}
+.hero{background-size:100% 140%;animation:sky 14s ease-in-out infinite alternate}@keyframes sky{to{background-position:0 100%}}
+.prog div{background-size:200%;animation:sh 3s linear infinite}@keyframes sh{to{background-position:200% 0}}
+.items{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:0 0 14px}
+.items span{background:#e5f7f4;color:#0b7a6e;padding:6px 11px;border-radius:99px;font-size:13px;font-weight:700}
+.al{animation:rise .35s cubic-bezier(.2,1.2,.4,1)}@keyframes rise{from{transform:scale(.9) translateY(20px);opacity:0}}
+.al .stop{background:#e0365b;color:#fff;font-size:17px;padding:16px;box-shadow:0 10px 24px rgba(224,54,91,.4)}
+.al h3{word-break:break-word}
+html[data-theme=light] .banner,html[data-theme=light] .when{background:#f1f5fc;border-color:#d5dded}
+html[data-theme=light] .when b,html[data-theme=light] .more summary{color:#4a5a7d}
+html[data-theme=light] .mic{background:#e9eff9}
+html[data-theme=light] .banner button{background:#e0e7f5;color:#14213a}
+.al.sh{max-width:420px;max-height:92vh;overflow:auto;text-align:left}.al.sh h3,.al.sh>p{text-align:center}.al.sh>p{margin-bottom:14px}
+.al .when{background:#eef2fb;border-color:#d5dded;margin-bottom:6px}.al .when b{color:#4a5a7d}
+.al .in{background:#fff;color:#14213a;border-color:#d5dded;color-scheme:light}
+.al .presets button{color:#8a5a00;background:#fff1d6;border-color:#f3d48f}
+.tg2{display:flex;gap:10px;align-items:center;font-size:13px;color:#4a5a7d;margin:12px 0}.tg2 input{width:20px;height:20px;accent-color:#0f9d8f;flex:none}
+.al small{display:block;color:#6b7690;margin-top:12px;font-size:12px;line-height:1.5;text-align:center}
+.tk{background-image:repeating-linear-gradient(90deg,rgba(20,33,58,.16) 0 2px,transparent 2px 5px,rgba(20,33,58,.16) 5px 6px,transparent 6px 10px);background-size:100% 5px;background-repeat:no-repeat;background-position:0 100%}
+.tip{margin-top:12px;font-size:12.5px;color:#ffe2ae;max-width:34em;line-height:1.5}
+.route{position:relative;height:30px;margin-top:18px;max-width:420px}
+.route i{position:absolute;left:0;right:0;top:15px;border-top:2px dashed rgba(255,255,255,.45)}
+.route span{position:absolute;top:0;left:4%;font-size:22px;transition:left 1s;transform:translateX(-50%) rotate(8deg);filter:drop-shadow(0 4px 6px rgba(0,0,0,.35))}
+.plane.go{animation:takeoff 2.4s ease-in forwards}@keyframes takeoff{to{transform:translate(110vw,-80px) rotate(-25deg);opacity:0}}
+.items button{background:#e5f7f4;color:#0b7a6e;padding:9px 14px;border-radius:99px;font-size:14px;font-weight:700;transition:.2s}
+.items button.got{background:#0f9d8f;color:#fff;transform:scale(.95)}.items button.got::before{content:"✓ "}
+.conf{position:fixed;inset:0;pointer-events:none;z-index:80;overflow:hidden}
+.conf i{position:absolute;top:-14px;width:9px;height:14px;border-radius:2px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(106vh) rotate(720deg)}}
+.sws{display:flex;gap:12px}.sws button{width:38px;height:38px;border-radius:50%;border:2px solid transparent;transition:.2s}.sws button.on{outline:3px solid #fff;transform:scale(1.1)}
+html[data-theme=light] .sws button.on{outline-color:#14213a}
+html[data-accent=ocean]{--amber:#4cc9f0;--teal:#7ee7c6}
+html[data-accent=ocean] .hero,html[data-accent=ocean] .shead{background-image:linear-gradient(180deg,#07203a,#0e4d7a 60%,#2a9fb8 88%,#8de6d0)}
+html[data-accent=orchid]{--amber:#ffa8e0;--teal:#b58cff}
+html[data-accent=orchid] .hero,html[data-accent=orchid] .shead{background-image:linear-gradient(180deg,#1a0f33,#4a2a86 55%,#c2559f 85%,#ffb3d9)}
+html[data-accent=forest]{--amber:#d9f27a;--teal:#5be0a8}
+html[data-accent=forest] .hero,html[data-accent=forest] .shead{background-image:linear-gradient(180deg,#0b2a1f,#14503a 55%,#4aa36b 85%,#d9f27a)}
+.page{display:none}
+body[data-view=tools] #tools,body[data-view=trip] #trip{display:block}
+body[data-view=tools] .hero,body[data-view=tools] main,body[data-view=trip] .hero,body[data-view=trip] main{display:none}
+body[data-view=tools] .start,body[data-view=trip] .start{display:none!important}
+.page,#settings{animation:vin .4s ease}@keyframes vin{from{opacity:0;transform:translateY(8px)}}
+.nav button{min-width:60px;padding:8px 9px;font-size:11px}.nav{gap:2px}
+.out{background:rgba(127,127,127,.12);border-radius:14px;padding:12px;font-size:14px;line-height:1.5}.out:empty{display:none}
+.wnow{display:flex;align-items:center;gap:12px}.wnow span{font-size:44px}.wnow b{font-size:28px;display:block}.wnow small{opacity:.7}
+.wdays{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.wd{background:rgba(127,127,127,.14);border-radius:12px;padding:8px 4px;text-align:center;display:grid;gap:2px;font-size:13px}.wd span{font-size:22px}
+.big{font-size:26px;font-weight:800;display:block}
+.li{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(127,127,127,.2);font-size:14px}.li span{flex:1}
+.li button{background:rgba(255,111,145,.18);color:var(--rose);width:28px;height:28px;border-radius:9px}
+.meter{height:12px;border-radius:9px;background:rgba(127,127,127,.2);overflow:hidden}.meter div{height:100%;width:0;transition:width .5s,background .3s;border-radius:9px}
+.ring{width:96px;height:96px;border-radius:50%;display:grid;place-items:center;flex:none;transition:background .6s}
+.ring b{width:74px;height:74px;border-radius:50%;background:var(--bg2);display:grid;place-items:center;font-size:20px}
+.rdy{display:flex;gap:16px;align-items:center;margin-bottom:10px}
+.ck{display:flex!important;align-items:center;gap:10px;padding:9px 0;font-size:14px;border-bottom:1px solid rgba(127,127,127,.15)}.ck input{width:20px;height:20px;accent-color:#0f9d8f;flex:none}
+.seg{display:flex;gap:8px}.seg button{flex:1;padding:11px;border-radius:12px;background:rgba(127,127,127,.18);font-weight:600;font-size:14px;transition:.2s}.seg button.on{background:var(--amber);color:#2a1500}
+.addl{display:flex;gap:8px}.addl .in{min-width:0}
+textarea.in{min-height:72px;resize:vertical}
+.panel{background-image:linear-gradient(180deg,rgba(255,255,255,.05),transparent 40%)}
+.panel h2{display:flex;align-items:center;gap:8px}
+.in:focus{border-color:var(--amber);box-shadow:0 0 0 3px rgba(255,181,71,.22);outline:none}
+.glance{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.gl{background:var(--bg2);border:1px solid var(--line);border-radius:18px;padding:12px 6px;text-align:center;box-shadow:0 10px 24px rgba(0,0,0,.2)}
+.gl b{display:block;font-size:24px;background:linear-gradient(135deg,var(--amber),var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent}.gl small{opacity:.7;font-size:11px}
+.phb{display:flex!important;width:100%;align-items:center;gap:10px;text-align:left;background:rgba(127,127,127,.12);border-radius:14px;padding:11px 14px;margin-top:8px;color:inherit}
+.phb div{flex:1}.phb small{display:block;opacity:.65;font-size:12px}.phb b{font-size:16px}
+.star{background:none;font-size:23px;color:#c9a227;margin-left:auto;align-self:flex-start;padding:0 2px;transition:transform .25s}.star.on{color:#ff9f1c;transform:scale(1.18) rotate(12deg)}
+.tm{display:flex;align-items:center;gap:10px;background:#eef2fb;border-radius:12px;padding:8px 12px;margin-top:6px;font-size:13px;color:#14213a}.tm span{flex:1}.tm button{background:#ffe3ea;color:#c2254d;width:26px;height:26px;border-radius:8px}
+.tlist{margin:8px 0}.tlist small{text-align:center}
+.bell{display:inline-block;transform-origin:50% 0;animation:bellr 3s infinite}
+@keyframes bellr{0%,60%,100%{rotate:0deg}65%{rotate:18deg}70%{rotate:-16deg}75%{rotate:12deg}80%{rotate:-8deg}85%{rotate:4deg}}
+.pulse{position:relative;animation:pl 1.4s infinite,shk 2.2s infinite}
+.pulse::before,.pulse::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--rose);animation:rip 1.8s infinite}.pulse::after{animation-delay:.9s}
+@keyframes rip{from{transform:scale(1);opacity:.7}to{transform:scale(2.2);opacity:0}}
+@keyframes shk{0%,50%,100%{rotate:0deg}10%{rotate:-12deg}20%{rotate:10deg}30%{rotate:-8deg}40%{rotate:5deg}}
+.items button{animation:chp .45s backwards cubic-bezier(.2,1.4,.4,1)}@keyframes chp{from{transform:scale(.4);opacity:0}}
+.spk{position:fixed;width:7px;height:7px;border-radius:50%;pointer-events:none;z-index:90;animation:spk .7s ease-out forwards}
+@keyframes spk{to{transform:translate(var(--dx),var(--dy)) scale(.2);opacity:0}}
+.fx{position:fixed;inset:0;display:grid;place-content:center;justify-items:center;gap:10px;background:rgba(5,10,25,.72);backdrop-filter:blur(4px);z-index:70;color:#fff;font-weight:700;font-size:18px;animation:fxo 1.8s forwards}
+.fx circle{stroke-dasharray:215;stroke-dashoffset:215;animation:dr .6s .1s forwards}.fx path{stroke-dasharray:60;stroke-dashoffset:60;animation:dr .4s .65s forwards}
+@keyframes dr{to{stroke-dashoffset:0}}@keyframes fxo{0%{opacity:0}12%,82%{opacity:1}100%{opacity:0}}
+.tk:not(.done):not(.cancelled){transition:transform .25s,box-shadow .25s}.tk:active{transform:scale(.985)}
+.nat{display:none}.native .nat{display:block}
+.native #cal,.native #install,.native #wake,.native .unlock,.native .tg2{display:none!important}
+.pk{background:none;font-size:26px;flex:none;transition:transform .2s}.pk:active{transform:scale(.8)}.tt.pkd{opacity:.55;text-decoration:line-through}
+.gh{margin:16px 0 8px;font-size:13px;opacity:.75;letter-spacing:.4px}
+.leave-btn{width:100%;margin-bottom:12px;background:rgba(61,214,195,.16)!important;color:var(--teal)!important;font-weight:700}
+.snz{display:flex;gap:6px}.snz button{flex:1;background:#eef0f6;color:#14213a;padding:13px 6px;border-radius:14px;font-weight:700;font-size:14px}.snz #msnz{flex:2.4}
+.tact{margin-left:12px;background:var(--amber);color:#2a1500;border-radius:9px;padding:6px 11px;font-weight:700;font-size:12px}
+.sug{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}.sug small{width:100%;opacity:.7}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="stars"></div><div class="cloud" style="top:70px"></div><div class="cloud c2"></div><div class="plane" aria-hidden="true">✈️</div>
+  <div class="wrap">
+    <div class="brand"><i>🧳</i>Comfy Travel Assistant</div>
+    <h1 id="greet">Pack your bags. We'll remind you out loud.</h1>
+    <p class="sub">Add your items, tap Start, and I will call them out at the time you choose. I never add anything myself.</p>
+    <div class="count" id="count"></div>
+    <div class="route" id="route" style="display:none"><i></i><span>✈️</span></div>
+    <p class="tip" id="tip"></p>
+  </div>
+</header>
+
+<main><div class="glance" id="glance"></div>
+  <section class="panel" id="addp">
+    <h2>Build your list</h2>
+    <div class="chips" id="chips"></div>
+    <div class="f">
+      <div class="addrow"><input class="in" id="txt" placeholder="Type an item, press Enter. Commas add many" maxlength="300" enterkeyhint="done" autocomplete="off"><button class="mic" id="mic" aria-label="Add by voice">🎤</button><button class="plus2" id="add" aria-label="Add item">＋</button></div>
+      <details class="more"><summary>📦 Ready-made lists</summary><div class="presets" id="tpls"><button data-t="Essentials">Essentials</button><button data-t="International">International</button><button data-t="Beach">Beach</button><button data-t="Business">Business</button></div><p class="note" style="margin-top:8px">Added as drafts only when you tap. Delete what you do not need.</p>
+      <div class="presets" id="mytpls" style="margin-top:8px"></div><button class="ghost2" id="savetpl">💾 Save my current list as a template</button></details>
+      <details class="more"><summary>More options</summary><div class="row"><select class="in" id="cat"></select><select class="in" id="rep" aria-label="Repeat"><option value="once">Once</option><option value="daily">↻ Every day</option><option value="weekly">↻ Every week</option></select></div></details>
+      </div>
+  </section>
+
+  <section class="panel">
+    <h2>Your reminders</h2><div class="banner" id="banner"></div><button class="ghost leave-btn" id="lbtn">🚪 I am leaving. Check everything</button>
+    <div class="unlock" id="unlock"><span>Tap once so your phone allows the voice to speak.</span><button id="unlockBtn">Enable voice</button></div>
+    <div class="prog"><div id="prog"></div></div>
+    <div class="bar"><input class="in" id="q" placeholder="Search reminders…" style="flex:1;min-width:150px;padding:11px 14px"></div>
+    <div class="bar"><div class="tabs" id="tabs"></div></div>
+    <div class="bulk" id="bulk"><b id="bn"></b><button style="background:#ffe3ea;color:#c2254d" id="bc">Cancel</button><button style="background:#e1f4dc;color:#2a7a1c" id="bd">Done</button><button style="background:#eef0f6" id="br">Delete</button><button style="background:#eef0f6" id="bx">Clear</button></div>
+    <div id="list"></div>
+  </section>
+</main>
+
+<section id="settings">
+ <div class="shead"><div class="wrap"><div class="brand"><i>🧳</i>Comfy Travel Assistant</div><h1>Settings</h1><p class="sub">Make Comfy look and sound exactly how you like.</p></div></div>
+ <div class="spage">
+  <div class="panel"><h2>👤 You and your trip</h2><div class="set">
+   <label>Name I greet you with<input class="in" id="nm" placeholder="e.g. Amaka"></label>
+   <label>Trip destination<input class="in" id="dest" placeholder="e.g. Dubai"></label>
+   <label>Departure date and time<input class="in" type="datetime-local" id="dep"></label></div></div>
+  <div class="panel"><h2>🎨 Appearance</h2><div class="set">
+   <label class="tg">Dark mode<input type="checkbox" class="sw" id="dark"></label>
+   <label>Text size<select class="in" id="zsel"><option value="1">Normal</option><option value="1.12">Large</option><option value="1.25">Extra large</option></select></label>
+   <label class="tg">Group items by category<input type="checkbox" class="sw" id="grpsw"></label>
+   <label>Colour theme<span class="sws" id="sws"><button data-a="sunset" style="background:linear-gradient(135deg,#ffb547,#ff6f91)" aria-label="Sunset"></button><button data-a="ocean" style="background:linear-gradient(135deg,#4cc9f0,#7ee7c6)" aria-label="Ocean"></button><button data-a="orchid" style="background:linear-gradient(135deg,#ffa8e0,#a46bff)" aria-label="Orchid"></button><button data-a="forest" style="background:linear-gradient(135deg,#d9f27a,#2aa36b)" aria-label="Forest"></button></span></label>
+   <label class="tg">Show quick-add suggestions<input type="checkbox" class="sw" id="chipsw"></label></div></div>
+  <div class="panel"><h2>🎙️ Her voice</h2><div class="set">
+   <label>Voice style<span class="seg" id="gseg"><button data-g="female">👩 Lady</button><button data-g="male">👨 Gentleman</button></span></label>
+   <label>Voice<select class="in" id="vs"></select><small id="gnote"></small></label>
+   <label>Volume <b id="volv"></b><input type="range" id="vol" min="0.1" max="1" step="0.05"></label>
+   <label>Speed<input type="range" id="rate" min="0.6" max="1.3" step="0.05"></label>
+   <label>Softness (pitch)<input type="range" id="pitch" min="0.8" max="1.6" step="0.05"></label>
+   <label>Repeat “I repeat…”<select class="in" id="maxrep"><option value="0">Until I press Stop</option><option value="3">3 times</option><option value="5">5 times</option></select></label>
+   <label>Pause between repeats<select class="in" id="gap"><option value="1000">Almost none</option><option value="3000">3 seconds</option><option value="6000">6 seconds</option></select></label>
+   <label>What she says <small>Use {greeting}, {name} and {item}</small><input class="in" id="tpl"></label>
+   <label class="tg">Chime before she speaks<input type="checkbox" class="sw" id="chimesw"></label>
+   <button class="ghost" id="test">▶ Hear her voice</button>
+   <button class="ghost" id="prev">🔔 Preview a reminder</button></div></div>
+  <div class="panel"><h2>🔔 Alerts</h2><div class="set">
+   <label class="tg">Vibrate on reminders<input type="checkbox" class="sw" id="vibsw"></label>
+   <label class="tg">Rising volume while repeating<input type="checkbox" class="sw" id="risesw"></label>
+   <label>Heads-up before a reminder<select class="in" id="hdsel"><option value="0">Off</option><option value="15">15 minutes before</option><option value="30">30 minutes before</option><option value="60">1 hour before</option></select></label>
+   <label>Snooze length<select class="in" id="snz"><option value="5">5 minutes</option><option value="10">10 minutes</option><option value="15">15 minutes</option></select></label>
+   <button class="ghost" id="notif">🔔 Allow notifications</button>
+   <button class="ghost nat" id="ntest">🔊 Test a real reminder now</button>
+   <button class="ghost nat" id="nbat">🔋 Let Comfy run in the background</button>
+   <button class="ghost nat" id="nexact">⏰ Allow exact reminder times</button>
+   <button class="ghost" id="wake">☀️ Keep screen awake</button>
+   <button class="ghost" id="install" style="display:none">📲 Install Comfy</button></div></div>
+  <div class="panel"><h2>💾 Your data</h2><div class="set">
+   <p class="note">Everything stays on this phone. Comfy only reminds you about items you add yourself. Nothing is added automatically.</p>
+   <button class="ghost" id="shr">🔗 Share my list</button>
+   <button class="ghost" id="exp">📤 Save a backup</button>
+   <label class="ghost" style="text-align:center;display:block;cursor:pointer">📥 Restore a backup<input type="file" id="imp" accept=".json,application/json" hidden></label>
+   <button class="ghost" id="clr">🧹 Clear finished reminders</button>
+   <button class="ghost" id="clrtpl">🧹 Delete my saved templates</button>
+   <button class="ghost" id="rst" style="color:#ff6f91">Reset everything</button></div></div>
+  <div class="foot">Comfy Travel Assistant · version 2</div>
+ </div>
+</section>
+
+<section class="page" id="tools">
+ <div class="shead"><div class="wrap"><div class="brand"><i>🧳</i>Comfy Travel Assistant</div><h1>Travel toolkit</h1><p class="sub">Handy tools for before and during your trip.</p></div></div>
+ <div class="spage">
+  <div class="panel"><h2>🌦️ Destination weather</h2><div class="set"><div class="addl"><input class="in" id="wcity" placeholder="City, e.g. Dubai" style="flex:1"><button class="ghost" id="wgo">Check</button></div><div class="out" id="wout">Enter a city to see the forecast.</div></div></div>
+  <div class="panel"><h2>🕒 World clock</h2><div class="set"><select class="in" id="tz"></select><div class="out" id="tzo"></div></div></div>
+  <div class="panel"><h2>💱 Currency</h2><div class="set"><div class="row"><input class="in" id="cfrom" placeholder="From, e.g. NGN" maxlength="3"><input class="in" id="cto" placeholder="To, e.g. USD" maxlength="3"></div><div class="row"><input class="in" id="cam" type="number" inputmode="decimal" placeholder="Amount"><input class="in" id="crt" type="number" inputmode="decimal" placeholder="Rate"></div><button class="ghost" id="clive">⟳ Get live rate</button><div class="out" id="cout"></div></div></div>
+  <div class="panel"><h2>⚖️ Luggage weight</h2><div class="set"><label>Allowance (kg)<input class="in" id="lim" type="number" inputmode="decimal"></label><div class="addl"><input class="in" id="bagn" placeholder="Bag name" style="flex:1"><input class="in" id="bagk" type="number" inputmode="decimal" placeholder="kg" style="width:84px"><button class="ghost" id="bad">Add</button></div><div id="bagl"></div><div class="meter"><div id="bagbar"></div></div><div class="out" id="bagt"></div></div></div>
+  <div class="panel"><h2>🗣️ Phrasebook</h2><div class="set"><select class="in" id="pl"></select><div id="phr"></div></div></div>
+  <div class="panel"><h2>🧾 Tip and split</h2><div class="set"><div class="row"><input class="in" id="tb" type="number" inputmode="decimal" placeholder="Bill"><input class="in" id="tp" type="number" inputmode="decimal" placeholder="Tip %" value="10"></div><input class="in" id="tn" type="number" inputmode="numeric" placeholder="People" value="1"><div class="out" id="tout"></div></div></div>
+  <div class="panel"><h2>📏 Unit converter</h2><div class="set"><select class="in" id="ut"></select><div class="addl"><input class="in" id="uv" type="number" inputmode="decimal" placeholder="Value" style="flex:1"><button class="ghost" id="usw">⇄ Swap</button></div><div class="out" id="uo"></div></div></div>
+  <div class="panel"><h2>💰 Trip budget</h2><div class="set"><label>Budget<input class="in" id="bud" type="number" inputmode="decimal" placeholder="e.g. 500000"></label><div class="addl"><input class="in" id="en" placeholder="Expense" style="flex:1"><input class="in" id="ev" type="number" inputmode="decimal" placeholder="Amount" style="width:104px"><button class="ghost" id="ead">Add</button></div><div id="expl"></div><div class="meter"><div id="expbar"></div></div><div class="out" id="expt"></div></div></div>
+ </div>
+</section>
+<section class="page" id="trip">
+ <div class="shead"><div class="wrap"><div class="brand"><i>🧳</i>Comfy Travel Assistant</div><h1>My trip</h1><p class="sub">Your readiness, flight and hotel details in one place.</p></div></div>
+ <div class="spage">
+  <div class="panel"><h2>🛫 Readiness</h2><div class="rdy"><div class="ring" id="ring"><b id="rpc">0%</b></div><p class="note" id="rtx"></p></div><div id="docs"></div></div>
+  <div class="panel"><h2>🗓️ Itinerary</h2><div class="set"><div class="addl"><input class="in" id="itt" placeholder="e.g. Flight EK 782" style="flex:1"><button class="ghost" id="ita">Add</button></div><input class="in" type="datetime-local" id="itd"><div id="itl"></div></div></div>
+  <div class="panel"><h2>🕘 Reminder history</h2><div id="hist"></div></div>
+  <div class="panel"><h2>🏨 Flight and stay</h2><div class="set">
+   <label>Airline and flight number<input class="in" data-tk="fl" placeholder="e.g. Emirates EK 782"></label>
+   <label>Departure airport and terminal<input class="in" data-tk="ap" placeholder="e.g. Lagos, Terminal 2"></label>
+   <label>Hotel name<input class="in" data-tk="ht"></label>
+   <label>Hotel address<input class="in" data-tk="ha"></label>
+   <label>Booking reference<input class="in" data-tk="br"></label>
+   <label>Emergency contact<input class="in" data-tk="ec" placeholder="Name and phone"></label>
+   <label>Notes<textarea class="in" data-tk="nt"></textarea></label>
+   <label>Passport expiry date<input class="in" type="date" data-tk="pe"></label><div class="out" id="pexp"></div>
+   <button class="ghost" id="hmap">📍 Open hotel in Maps</button>
+   <button class="ghost" id="ecall">📞 Call emergency contact</button>
+   <button class="ghost" id="tshare">🔗 Share trip card</button></div></div>
+ </div>
+</section>
+<nav class="nav" aria-label="Main"><button class="on" data-v="home"><span>🏠</span>Home</button><button data-v="tools"><span>🧰</span>Tools</button><button class="plus" data-v="add"><span>＋</span>Add</button><button data-v="trip"><span>✈️</span>Trip</button><button data-v="settings"><span>⚙️</span>Settings</button></nav>
+
+
+<div class="modal" id="modal"><div class="al" role="alertdialog" aria-live="assertive">
+  <div class="pulse" id="mi">🧳</div><h3 id="mt"></h3><div class="items" id="mlist"></div><p id="mp"></p>
+  <div class="btns"><button class="stop" id="mstop">⏹ Stop</button><div class="snz"><button id="msnz">Snooze</button><button data-m="5">5m</button><button data-m="15">15m</button><button data-m="60">1h</button></div><button class="b2" id="mx">Cancel this reminder</button></div>
+</div></div>
+<div class="modal" id="sheet"><div class="al sh">
+  <h3>When should I remind you?</h3><p>I will read all your items back to back at every time you add.</p>
+  <div class="when"><b>Remind me on</b>
+        <div class="row"><input class="in" type="date" id="d" aria-label="Date"><input class="in" type="time" id="t" aria-label="Time"></div>
+        <div class="presets" id="presets"><button data-p="1h">In 1 hour</button><button data-p="eve">Tonight 8pm</button><button data-p="morn">Tomorrow 8am</button><button data-p="dep">3h before takeoff</button></div></div>
+  <button class="ghost2" id="addt" style="width:100%;text-align:center">＋ Add this time</button>
+  <div class="tlist" id="tlist"></div>
+  <div class="presets" id="smartrow" style="margin-top:10px"><button id="smart">✨ Smart schedule</button><button id="hear">▶ Hear what I will say</button></div>
+  <label class="tg2"><input type="checkbox" id="bgm" checked>Keep working when the screen is off (experimental)</label>
+  <div class="btns"><button class="b1" id="go2">Start reminders</button><button class="b2" id="cal">📅 Also add to my phone Calendar</button><button class="b2" id="sx">Back to my list</button></div>
+  <small id="tip2">Tip: keep Comfy open on your screen. Phones pause web pages that run in the background.</small>
+</div></div>
+<div class="modal" id="leave"><div class="al sh"><div class="pulse" style="background:linear-gradient(135deg,var(--teal),#2aa6c9)">🚪</div><h3>Before you leave</h3><p id="lp"></p><div class="items" id="llist"></div><div class="btns"><button class="b1" id="lread">🔊 Read it to me</button><button class="b2" id="lun">↺ Uncheck all (repacking)</button><button class="b2" id="lx">Close</button></div></div></div>
+<button class="start" id="start"></button>
+<div class="toast" id="toast"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const CA=window.ComfyNative?(()=>{const N=window.ComfyNative,P=f=>a=>{try{const r=f(a);return Promise.resolve(r?JSON.parse(r):{})}catch(e){return Promise.reject(e)}};
+  return{scheduleAll:P(a=>N.scheduleAll(JSON.stringify(a))),stop:P(()=>N.stop()),consumeFired:P(()=>N.consumeFired()),testNow:P(a=>N.testNow(JSON.stringify(a))),askNotifications:P(()=>N.askNotifications()),openBatterySettings:P(()=>N.openBatterySettings()),canExact:P(()=>N.canExactAlarms()),openExact:P(()=>N.openExactAlarmSettings()),share:P(a=>N.share(JSON.stringify(a))),getVoices:()=>new Promise(r=>{window.__onVoices=r;N.getVoices()})}})():null;
+let NV=[];if(CA)document.documentElement.classList.add('native');
+const CATS={Documents:'🛂',Money:'💵',Health:'💊',Tech:'🔌',Clothes:'👕',Toiletries:'🧴',Home:'🏠',Other:'🧳'};
+const QUICK=[['Passport','Documents'],['Visa','Documents'],['Flight ticket','Documents'],['Cash','Money'],['Phone charger','Tech'],['Medication','Health'],['Power bank','Tech'],['Lock the house','Home'],['Toothbrush','Toiletries']];
+const DEFTPL="{greeting} {name}, don't forget to take the {item}.";
+const greet=(d=new Date())=>{const h=d.getHours();return h<12?'Good morning':h<17?'Good afternoon':'Good evening'};
+let S={items:[],name:'',dest:'',dep:'',voice:'',rate:0.95,pitch:1.15,filter:'upcoming',dark:true,vol:1,chime:true,vib:true,snooze:5,tpl:DEFTPL,chips:false,maxrep:0,gap:1000,bg:true,accent:'sunset',gender:'female',zoom:1,itin:[],mytpls:[],group:false,rise:false,head:0,log:[],trip:{},docs:{},bags:[],exp:[],bud:'',lim:23,cfrom:'',cto:'',crate:'',tz:'Europe/London',wcity:''};
+try{const x=JSON.parse(localStorage.getItem('voyage_v1'));if(x)S={...S,...x}}catch(e){}
+let _st=null;const syncSoon=()=>{clearTimeout(_st);_st=setTimeout(()=>syncNative(),500)};
+const save=()=>{try{localStorage.setItem('voyage_v1',JSON.stringify(S))}catch(e){}if(CA)syncSoon()};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+if((S.ver||0)<3){S.items.forEach(i=>{i.armed=false});S.chips=false;S.filter='all';S.ver=3;S.maxrep=S.maxrep||0;S.gap=1000;if(!S.tpl||/Safe travels/.test(S.tpl))S.tpl=DEFTPL;save()}
+if((S.ver||0)<4){S.ver=4;if(!S.tpl||/Please remember|Safe travels/.test(S.tpl))S.tpl=DEFTPL;S.accent=S.accent||'sunset';save()}
+if((S.ver||0)<5){S.ver=5;const r=+S.rate;if(!(r>=0.5&&r<=1.5)){S.crate=S.crate||(S.rate||'');S.rate=S.gender==='male'?0.92:0.95}save()}
+let sel=new Set(),queue=[],current=null,voices=[];
+
+/* ---------- Voice ---------- */
+const FEM=/female|woman|samantha|zira|aria|jenny|susan|hazel|karen|moira|tessa|victoria|fiona|libby|sonia|natasha|catherine|allison|ava|google us english|google uk english female|serena|kate|joanna/i;
+const MALE=/(?<![a-z])male|david|mark|james|george|daniel|guy|ryan|alex|fred|thomas|arthur|oliver|liam|matthew|roger|richard|eric|brian|christopher|ralph|rishi|aaron|gordon/i;
+const isF=v=>FEM.test(v.name),isM=v=>MALE.test(v.name)&&!isF(v),gm=v=>S.gender==='male'?isM(v):isF(v);
+function loadVoices(){
+  if(CA&&NV.length){$('vs').innerHTML=NV.map(v=>`<option value="${esc(v.name)}">${esc(v.name)} (${esc(v.lang)})</option>`).join('');if(!NV.some(v=>v.name===S.nativeVoice))S.nativeVoice=NV[0].name;$('vs').value=S.nativeVoice;$('gnote').textContent='';return}
+  voices=(speechSynthesis.getVoices()||[]).filter(v=>/^en/i.test(v.lang));if(!voices.length)voices=speechSynthesis.getVoices()||[];
+  const ranked=[...voices].sort((a,b)=>gm(b)-gm(a));
+  $('vs').innerHTML=ranked.map(v=>`<option value="${esc(v.name)}">${esc(v.name)} (${esc(v.lang)})${isF(v)?' ♀':isM(v)?' ♂':''}</option>`).join('')||'<option>Default voice</option>';
+  if(!S.voice||!voices.some(v=>v.name===S.voice))S.voice=ranked[0]?ranked[0].name:'';
+  $('vs').value=S.voice;
+  $('gnote').textContent=S.gender==='male'&&!voices.some(isM)?'No male voice found on this phone, so I deepen the pitch of the voice you picked.':'';
+}
+if('speechSynthesis' in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}
+function speak(text,done){
+  if(!('speechSynthesis' in window)){toast('Voice is not supported in this browser');return}
+  speechSynthesis.cancel();try{speechSynthesis.resume()}catch(e){}
+  const u=new SpeechSynthesisUtterance(text);
+  const v=voices.find(v=>v.name===S.voice);if(v){u.voice=v;u.lang=v.lang}
+  u.rate=+S.rate;u.pitch=+S.pitch;u.volume=S.rise&&looping?Math.min(+S.vol,.35+repN*.2):+S.vol;
+  if(done)u.onend=done;
+  speechSynthesis.speak(u);
+}
+const who=()=>S.name?S.name:'traveller';
+const fill=(t,names,d)=>(t||DEFTPL).replace(/\{greeting\}/g,greet(d)).replace(/\{name\}/g,who()).replace(/\{item\}/g,names);
+const phrase=i=>fill(S.tpl,i.text);
+
+/* ---------- Helpers ---------- */
+const ts=i=>new Date(i.when).getTime();
+const fmt=i=>new Date(i.when).toLocaleString([],{weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'});
+function toast(m,act){const t=$('toast');t.textContent=m;if(act){const b=document.createElement('button');b.textContent=act.label;b.className='tact';b.onclick=()=>{act.fn();t.classList.remove('show')};t.appendChild(b)}t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),act?5000:2600)}
+const undo=(msg,before)=>toast(msg,{label:'Undo',fn:()=>{S.items=JSON.parse(before);sel.clear();render()}});
+function status(i){if(i.status!=='active')return i.status;if(!i.armed)return 'draft';return ts(i)<Date.now()?'overdue':'upcoming'}
+const pad=n=>String(n).padStart(2,'0');
+function localInput(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}
+function defaults(){const d=new Date(Date.now()+3600000);$('d').value=localInput(d);$('t').value=`${pad(d.getHours())}:${pad(d.getMinutes())}`}
+
+/* ---------- Render ---------- */
+const TABS=[['all','All'],['draft','Drafts'],['upcoming','Scheduled'],['overdue','Missed'],['done','Done'],['cancelled','Cancelled']];
+function render(){
+  $('chips').style.display=S.chips?'flex':'none';
+  {const dd=S.dep?Math.ceil((new Date(S.dep)-Date.now())/864e5):null,rd=(()=>{const a=S.items.filter(i=>i.status!=='cancelled');return a.length?Math.round(a.filter(i=>i.status==='done'||i.packed).length/a.length*100):0})();
+  $('glance').innerHTML=`<div class="gl"><b>${S.items.filter(i=>i.status==='active').length}</b><small>Items</small></div><div class="gl"><b>${rd}%</b><small>Packed</small></div><div class="gl"><b>${dd==null?'–':Math.max(0,dd)}</b><small>Days to go</small></div>`;countUp();histRender()}
+  const act=S.items.filter(i=>i.status==='active'),dr=act.filter(i=>!i.armed).length,on=act.filter(i=>i.armed&&!i.fired).length;
+  $('banner').innerHTML=on?`<span class="bell">🔔</span><span>Reminders are ON · ${on} item${on>1?'s':''}${dr?' · '+dr+' draft'+(dr>1?'s':''):''}<span id="nx"></span></span><button data-b="pause">Pause</button>`:dr?`<span>✏️</span><span>${dr} draft${dr>1?'s':''}. Nothing is spoken until you tap Start.</span>`:'<span>📝</span><span>Add your first item below.</span>';
+  $('start').style.display=dr?'flex':'none';$('start').textContent="✅ I'm done. Set time and start ("+dr+")";
+  $('tabs').innerHTML=TABS.map(([k,l])=>`<button class="tab ${S.filter===k?'on':''}" data-k="${k}" style="animation-delay:${k*70}ms">${l} <small>${k==='all'?S.items.length:S.items.filter(i=>status(i)===k).length}</small></button>`).join('');
+  const q=$('q').value.trim().toLowerCase();
+  let list=S.items.filter(i=>(S.filter==='all'||status(i)===S.filter)&&(!q||i.text.toLowerCase().includes(q)||i.cat.toLowerCase().includes(q)));
+  list.sort((a,b)=>(S.group?a.cat.localeCompare(b.cat):0)||(b.star?1:0)-(a.star?1:0)||ts(a)-ts(b));
+  $('list').innerHTML=list.length?list.map((i,k)=>{const st=status(i);const gh=S.group&&(k===0||list[k-1].cat!==i.cat)?`<h4 class="gh">${CATS[i.cat]||'🧳'} ${esc(i.cat)}</h4>`:'';const lbl={draft:'Draft',upcoming:'Scheduled',overdue:'Missed',done:'Done',cancelled:'Cancelled'}[st];
+    return gh+`<article class="tk ${st} ${sel.has(i.id)?'sel':''} ${i.id===newId?'pop':''}"><div class="main"><input type="checkbox" data-s="${i.id}" ${sel.has(i.id)?'checked':''} aria-label="Select ${esc(i.text)}"><button class="ic pk" data-pack="${i.id}" aria-label="Mark as packed">${i.packed?'✅':(CATS[i.cat]||'🧳')}</button><div><div class="tt ${i.packed?'pkd':''}" data-edit="${i.id}" title="Tap to edit">${esc(i.text)}</div><div class="meta">${esc(i.cat)} · ${fmt(i)}${i.rep&&i.rep!=='once'?' · ↻ '+i.rep:''}</div><span class="tag ${st}">${lbl}</span></div><button class="star ${i.star?'on':''}" data-star="${i.id}" aria-label="Most important">${i.star?'★':'☆'}</button></div>
+    <div class="stub">${i.status==='active'?`<button data-a="speak" data-id="${i.id}">🔊 Play</button><button class="x" data-a="cancel" data-id="${i.id}">Cancel</button>`:`<button data-a="restore" data-id="${i.id}">Restore</button><button class="x" data-a="del" data-id="${i.id}">Delete</button>`}</div></article>`}).join(''):
+    `<div class="empty"><big>🌍</big>${S.items.length?'Nothing matches here yet.':'<b>Add an item above and press Enter.</b><br>Then tap Start and I will remind you at the time you chose.'}</div>`;
+  const tot=S.items.filter(i=>i.status!=='cancelled').length,dn=S.items.filter(i=>i.status!=='cancelled'&&(i.status==='done'||i.packed)).length;
+  $('prog').style.width=(tot?dn/tot*100:0)+'%';
+  $('bulk').classList.toggle('show',sel.size>0);$('bn').textContent=sel.size+' selected';
+  const hr=new Date().getHours(),gp=hr<12?'Good morning':hr<18?'Good afternoon':'Good evening';$('greet').textContent=S.name?`${gp}, ${S.name}. Ready to travel?`:`${gp}. Ready to travel?`;
+  newId=null;save();
+}
+function countdown(){
+  const el=$('count'),r=$('route');r.style.display=S.dep?'block':'none';if(S.dep){const a=S.depSet||new Date(S.dep)-6048e5,p=Math.min(1,Math.max(0,(Date.now()-a)/(new Date(S.dep)-a)));r.querySelector('span').style.left=(4+p*92)+'%'}
+  if(!S.dep){el.innerHTML='<div class="tripbtn">Set your departure in Trip settings to start the countdown</div>';return}
+  const ms=new Date(S.dep)-Date.now();
+  if(ms<=0){el.innerHTML=`<div class="tripbtn">✈️ ${esc(S.dest||'Your trip')} has begun. Safe travels!</div>`;return}
+  const d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=Math.floor(ms%36e5/6e4);
+  el.innerHTML=`<div class="cd"><b>${d}</b><span>days</span></div><div class="cd"><b>${h}</b><span>hours</span></div><div class="cd"><b>${m}</b><span>mins</span></div><div class="tripbtn">to ${esc(S.dest||'takeoff')}</div>`;
+}
+
+/* ---------- Actions ---------- */
+const GUESS=[[/passport|visa|ticket|boarding|licen[cs]e|document|insurance|booking/i,'Documents'],[/cash|money|card|dollar|naira|wallet|forex/i,'Money'],[/pill|medic|drug|vitamin|inhaler|first aid|mask/i,'Health'],[/charger|phone|laptop|power ?bank|cable|adapter|camera|headphone|earbud/i,'Tech'],[/shirt|shoe|cloth|jacket|sock|dress|trouser|coat|hat|umbrella/i,'Clothes'],[/tooth|soap|perfume|deodorant|towel|cream|razor/i,'Toiletries'],[/lock|window|gas|stove|light|key|door|plug/i,'Home']];
+const guess=t=>{for(const[r,c]of GUESS)if(r.test(t))return c;return 'Other'};
+let newId=null;
+function addFromInput(){
+  const parts=$('txt').value.split(/[,;\n]+/).map(x=>x.trim()).filter(Boolean);
+  if(!parts.length){$('txt').focus();return}
+  const w=new Date();
+  const c=$('cat').value;
+  parts.forEach(p=>{const id=Date.now().toString(36)+Math.random().toString(36).slice(2,5);S.items.push({id,text:p,cat:c==='auto'?guess(p):c,when:w.toISOString(),rep:$('rep').value,armed:false,status:'active',fired:false});newId=id});
+  $('txt').value='';$('txt').focus();unlock();S.filter='all';render();if(navigator.vibrate)navigator.vibrate(12);burst($('add'));
+}
+$('add').onclick=addFromInput;
+$('txt').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();addFromInput()}};
+const setWhen=d=>{$('d').value=localInput(d);$('t').value=`${pad(d.getHours())}:${pad(d.getMinutes())}`;toast('Time set')};
+$('presets').onclick=e=>{const b=e.target.closest('button');if(!b)return;const p=b.dataset.p,d=new Date();
+  if(p==='1h')d.setHours(d.getHours()+1);
+  else if(p==='eve'){d.setHours(20,0,0,0);if(d<=new Date())d.setDate(d.getDate()+1)}
+  else if(p==='morn'){d.setDate(d.getDate()+1);d.setHours(8,0,0,0)}
+  else if(p==='dep'){if(!S.dep){toast('Set your departure time in Settings first');return}d.setTime(new Date(S.dep).getTime()-3*36e5)}
+  setWhen(d)};
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!SR)$('mic').style.display='none';
+$('mic').onclick=()=>{unlock();const r=new SR();r.lang=navigator.language||'en-US';r.interimResults=false;$('mic').classList.add('rec');
+  r.onresult=e=>{$('txt').value=e.results[0][0].transcript.replace(/\band\b/gi,',');addFromInput()};
+  r.onend=()=>$('mic').classList.remove('rec');r.onerror=()=>{$('mic').classList.remove('rec');toast('I could not hear you. Try again')};r.start()};
+$('start').onclick=()=>{unlock();if(CA){CA.askNotifications().catch(()=>{});setTimeout(exactGuide,1500)}if(!S.items.some(i=>i.status==='active'&&!i.armed))return;
+  const x=new Date($('d').value+'T'+$('t').value);if(isNaN(x)||x<=Date.now())defaults();
+  sheetTimes=[];renderTimes();$('bgm').checked=S.bg!==false;$('sheet').classList.add('show')};
+$('sx').onclick=()=>$('sheet').classList.remove('show');
+$('go2').onclick=()=>{
+  let T=[...sheetTimes];
+  if(!T.length){const w=new Date($('d').value+'T'+$('t').value);if(isNaN(w)){toast('Choose a date and time');return}T=[w.toISOString()]}
+  T.sort();const fut=T.filter(x=>new Date(x)>Date.now());
+  if(fut.length)T=fut;else if(!confirm('That time has passed, so I will remind you right now. Continue?'))return;
+  const d=S.items.filter(i=>i.status==='active'&&!i.armed);
+  d.forEach(i=>{i.sched=T;i.when=T[0];i.later=T.slice(1);i.armed=true;i.fired=false});
+  S.bg=$('bgm').checked;save();$('sheet').classList.remove('show');render();keepAlive(true);armedFx();
+  {const pl=document.querySelector('.plane');pl.classList.add('go');setTimeout(()=>pl.classList.remove('go'),2600)}
+  try{if(navigator.wakeLock&&!(wl&&!wl.released))keepAwake()}catch(e){}
+  const at=new Date(T[0]).toLocaleString([],{weekday:'long',hour:'numeric',minute:'2-digit'});
+  speak(`All set ${who()}. I will remind you about ${d.length} ${d.length>1?'items':'item'}${T.length>1?' at '+T.length+' times, starting':''} on ${at}.`);
+  toast(CA?(T.length>1?T.length+' reminder times set. I will remind you even when Comfy is closed':'Reminders are ON. I will remind you even when Comfy is closed'):(T.length>1?T.length+' reminder times set. Keep Comfy open':'Reminders are ON. Keep Comfy open on your screen'))};
+$('cal').onclick=()=>{const w=new Date($('d').value+'T'+$('t').value);if(isNaN(w)){toast('Choose a date and time first');return}
+  const f=x=>x.toISOString().replace(/[-:]|\\.\\d{3}/g,''),n=S.items.filter(i=>i.status==='active').map(i=>i.text);if(!n.length)return;
+  const u='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent('Comfy: '+n.join(', ').slice(0,90))+'&details='+encodeURIComponent('Remember:\\n'+n.map(x=>'• '+x).join('\\n'))+'&dates='+f(w)+'/'+f(new Date(w.getTime()+9e5));
+  window.open(u,'_blank')};
+$('banner').onclick=e=>{if(e.target.dataset.b==='pause'){S.items.forEach(i=>{if(i.status==='active'&&!i.fired)i.armed=false});render();toast('Paused. Your items are back in drafts')}};
+$('chips').innerHTML=QUICK.map(([t,c])=>`<button class="chip" data-t="${t}" data-c="${c}">${CATS[c]} ${t}</button>`).join('');
+$('chips').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;$('txt').value=b.dataset.t;$('cat').value=b.dataset.c};
+$('cat').innerHTML='<option value="auto">✨ Auto category</option>'+Object.keys(CATS).map(c=>`<option value="${c}">${CATS[c]} ${c}</option>`).join('');
+$('tabs').onclick=e=>{const b=e.target.closest('.tab');if(b){S.filter=b.dataset.k;render()}};
+$('q').oninput=render;
+const get=id=>S.items.find(i=>i.id===id);
+$('list').onclick=e=>{
+  const pk=e.target.closest('[data-pack]');if(pk){const it=get(pk.dataset.pack);it.packed=!it.packed;if(navigator.vibrate)navigator.vibrate(12);render();if(it.packed&&S.items.filter(i=>i.status==='active').every(i=>i.packed))confetti();return}
+  const sb=e.target.closest('[data-star]');if(sb){const it=get(sb.dataset.star);it.star=!it.star;render();return}
+  const ed=e.target.closest('[data-edit]');if(ed){const it=get(ed.dataset.edit),v=prompt('Edit item',it.text);if(v&&v.trim()){it.text=v.trim();render()}return}
+  const c=e.target.closest('input[data-s]');
+  if(c){c.checked?sel.add(c.dataset.s):sel.delete(c.dataset.s);render();return}
+  const b=e.target.closest('button[data-a]');if(!b)return;const i=get(b.dataset.id);unlock();const before=JSON.stringify(S.items);
+  if(b.dataset.a==='speak')speak(phrase(i));
+  if(b.dataset.a==='cancel'){i.status='cancelled';speechSynthesis.cancel();undo('Cancelled “'+i.text+'”',before)}
+  if(b.dataset.a==='restore'){i.status='active';i.fired=ts(i)<Date.now();toast('Restored')}
+  if(b.dataset.a==='del'){S.items=S.items.filter(x=>x!==i);sel.delete(i.id);undo('Deleted “'+i.text+'”',before)}
+  render();
+};
+const bulk=fn=>{S.items.filter(i=>sel.has(i.id)).forEach(fn);sel.clear();render()};
+$('bc').onclick=()=>{const b4=JSON.stringify(S.items);bulk(i=>i.status='cancelled');undo('Selected reminders cancelled',b4)};
+$('bd').onclick=()=>bulk(i=>i.status='done');
+$('br').onclick=()=>{const b4=JSON.stringify(S.items);S.items=S.items.filter(i=>!sel.has(i.id));sel.clear();render();undo('Deleted',b4)};
+$('bx').onclick=()=>{sel.clear();render()};
+
+/* ---------- Alarms ---------- */
+let unlocked=false;
+function unlock(){if(unlocked)return;unlocked=true;$('unlock').style.display='none';
+  try{const u=new SpeechSynthesisUtterance(' ');u.volume=0;speechSynthesis.speak(u)}catch(e){}}
+$('unlockBtn').onclick=()=>{unlock();speak(`Hello ${who()}. Voice is on. I will remind you before you travel.`)};
+let looping=false,repN=0,loopT=null,lastR=0,lastP=0,ka=null;
+const human=ms=>{const s=Math.max(0,Math.round(ms/1000)),d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60);return d?d+'d '+h+'h':h?h+'h '+m+'m':m?m+'m '+s%60+'s':s+'s'};
+function keepAlive(on){if(CA)return;
+  if(on&&S.bg){
+    if(!ka){const n=8000,b=new Uint8Array(44+n*2),v=new DataView(b.buffer),w=(o,t)=>[...t].forEach((c,i)=>v.setUint8(o+i,c.charCodeAt(0)));
+      w(0,'RIFF');v.setUint32(4,36+n*2,true);w(8,'WAVEfmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,8000,true);v.setUint32(28,16000,true);v.setUint16(32,2,true);v.setUint16(34,16,true);w(36,'data');v.setUint32(40,n*2,true);
+      for(let i=0;i<n;i++)v.setInt16(44+i*2,i%2?2:-2,true);
+      ka=new Audio(URL.createObjectURL(new Blob([b],{type:'audio/wav'})));ka.loop=true;ka.volume=.05}
+    ka.play().catch(()=>{});
+    try{navigator.mediaSession.metadata=new MediaMetadata({title:'Comfy is waiting to remind you',artist:'Comfy Travel Assistant'})}catch(e){}
+  }else if(ka)ka.pause();
+}
+function check(){
+  if(!current){const due=S.items.filter(i=>i.armed&&i.status==='active'&&!i.fired&&ts(i)<=Date.now()&&(!CA||Date.now()-ts(i)<90000));if(due.length)ring(due)}
+  const pend=S.items.filter(i=>i.armed&&i.status==='active'&&!i.fired).map(ts).sort((a,b)=>a-b),el=$('nx');
+  if(el)el.textContent=pend.length?' · next in '+human(pend[0]-Date.now()):'';
+  if(+S.head&&pend.length&&!current){const hs=window.__hs||(window.__hs=new Set()),dt=pend[0]-Date.now();
+    if(dt>45000&&dt<=S.head*6e4&&!hs.has(pend[0])){hs.add(pend[0]);chime();setTimeout(()=>speak(`Heads up ${who()}. Your reminder is in ${Math.round(dt/60000)} minutes.`),900);toast('Reminder in '+human(dt))}}
+  if(ka&&!pend.length&&!current)keepAlive(false);
+  if(CA&&Date.now()-lastP>3000){lastP=Date.now();pullFired()}
+  if(Date.now()-lastR>15000){lastR=Date.now();render()}
+}
+const joinList=a=>a.length>1?a.slice(0,-1).join(', ')+' and '+a[a.length-1]:a[0];
+function say(first){
+  if(!looping||!current)return;
+  const L=[...current].sort((a,b)=>(b.star?1:0)-(a.star?1:0)),names=joinList(L.map(i=>i.text)),st=L.filter(i=>i.star),imp=st.length&&st.length<L.length?' Most important of all: '+joinList(st.map(i=>i.text))+'.':'';
+  speak(first?fill(S.tpl,names)+imp:"I repeat. Don't forget to take the "+names+"."+imp);
+}
+function startLoop(){clearInterval(loopT);let idle=0;
+  loopT=setInterval(()=>{
+    if(!looping){clearInterval(loopT);return}
+    if(speechSynthesis.speaking||speechSynthesis.pending){idle=0;return}
+    idle+=300;
+    if(idle>=(+S.gap||1000)){idle=0;if(S.maxrep&&repN+1>=S.maxrep)return;repN++;say(false)}
+  },300)}
+function ring(list,preview){
+  current=list;looping=true;repN=0;list.forEach(i=>i.fired=true);save();
+  $('mi').textContent=list.length>1?'🧳':(CATS[list[0].cat]||'🧳');
+  $('mt').textContent=list.length>1?list.length+' things to remember':list[0].text;
+  $('mlist').innerHTML=list.map((i,k)=>`<button data-k="${k}">${CATS[i.cat]||'🧳'} ${esc(i.text)}</button>`).join('');
+  $('mp').textContent=preview?'This is only a preview':'Tick each item as you pack it, or tap Stop';
+  $('msnz').textContent='Snooze '+S.snooze+' minutes';
+  $('modal').classList.add('show');
+  if(S.vib&&navigator.vibrate)navigator.vibrate([300,150,300]);
+  notify(list);
+  if(!CA){chime();setTimeout(()=>{say(true);startLoop()},S.chime?900:100)}
+}
+function notify(list){
+  if(!('Notification' in window)||Notification.permission!=='granted')return;
+  const o={body:'Tap to open Comfy',icon:'icon-192.png',tag:'comfy-alarm',vibrate:[300,150,300],requireInteraction:true},t='Reminder: '+joinList(list.map(i=>i.text));
+  if(navigator.serviceWorker&&navigator.serviceWorker.ready)navigator.serviceWorker.ready.then(r=>r.showNotification(t,o)).catch(()=>{});
+  else{try{new Notification(t,o)}catch(e){}}
+}
+function closeAlarm(){if(CA)CA.stop().catch(()=>{});looping=false;clearInterval(loopT);speechSynthesis.cancel();$('modal').classList.remove('show');current=null;render()}
+function logAdd(how){S.log=[{t:Date.now(),items:current.map(i=>i.text),how},...(S.log||[])].slice(0,30);save()}
+function advance(c){
+  if(c.later&&c.later.length){c.when=c.later.shift();c.fired=false;return}
+  if(c.rep&&c.rep!=='once'&&S.items.includes(c)){const k=c.rep==='daily'?1:7,sh=x=>{const d=new Date(x);do{d.setDate(d.getDate()+k)}while(d<=Date.now());return d.toISOString()},ns=(c.sched&&c.sched.length?c.sched:[c.when]).map(sh).sort();
+    S.items.push({...c,id:Date.now().toString(36)+'r'+Math.random().toString(36).slice(2,4),sched:ns,when:ns[0],later:ns.slice(1),status:'active',fired:false})}
+  c.status='done'}
+$('mstop').onclick=()=>{logAdd('Stopped');current.forEach(advance);if(current.some(c=>c.status==='done'))confetti();closeAlarm()};
+const snz=m=>{logAdd('Snoozed');current.forEach(c=>{c.when=new Date(Date.now()+m*60000).toISOString();c.fired=false});toast('Snoozed for '+(m>=60?(m/60)+' hour':m+' minutes'));closeAlarm()};
+$('msnz').onclick=()=>snz(+S.snooze||5);document.querySelectorAll('.snz [data-m]').forEach(b=>b.onclick=()=>snz(+b.dataset.m));
+$('mx').onclick=()=>{logAdd('Cancelled');current.forEach(c=>c.status='cancelled');closeAlarm()};
+$('prev').onclick=()=>{if(current)return;unlock();view('home');ring([{id:'preview',text:'your passport',cat:'Documents',status:'active'}],true)};
+$('shr').onclick=()=>{const t='My travel list:\n'+S.items.filter(i=>i.status!=='cancelled').map(i=>'• '+i.text).join('\n');shareText('Comfy travel list',t)};
+
+/* ---------- Settings ---------- */
+$('nm').value=S.name;$('dest').value=S.dest;$('dep').value=S.dep;$('rate').value=S.rate;$('pitch').value=S.pitch;
+$('nm').oninput=e=>{S.name=e.target.value;render()};
+$('dest').oninput=e=>{S.dest=e.target.value;save();countdown()};
+$('dep').onchange=e=>{S.dep=e.target.value;S.depSet=Date.now();save();countdown()};
+$('vs').onchange=e=>{S.voice=e.target.value;if(CA)S.nativeVoice=e.target.value;save();speak(`Hello ${who()}. I will be your voice.`)};
+$('rate').oninput=e=>{S.rate=e.target.value;save()};
+$('pitch').oninput=e=>{S.pitch=e.target.value;save()};
+$('test').onclick=()=>{unlock();speak(`Hello ${who()}. This is how I will sound when I remind you.`)};
+$('notif').onclick=()=>{if(!('Notification' in window)){toast('Notifications not supported here');return}Notification.requestPermission().then(p=>toast(p==='granted'?'Notifications on':'Notifications blocked'))};
+
+function applyTheme(){document.documentElement.dataset.theme=S.dark?'dark':'light';document.documentElement.style.zoom=S.zoom||1;document.documentElement.dataset.accent=S.accent||'sunset';document.querySelectorAll('#sws button').forEach(b=>b.classList.toggle('on',b.dataset.a===(S.accent||'sunset')));document.querySelector('meta[name=theme-color]').content=S.dark?'#0b1b33':'#e9eff9'}
+function chime(){if(!S.chime)return;try{const a=new(window.AudioContext||window.webkitAudioContext)();[[880,0],[1175,.22],[1480,.44]].forEach(([f,t])=>{const o=a.createOscillator(),g=a.createGain(),st=a.currentTime+t;o.type='sine';o.frequency.value=f;o.connect(g);g.connect(a.destination);g.gain.setValueAtTime(0,st);g.gain.linearRampToValueAtTime(.3*(+S.vol||1),st+.03);g.gain.exponentialRampToValueAtTime(.001,st+.6);o.start(st);o.stop(st+.65)})}catch(e){}}
+function view(v){document.body.dataset.view=v;document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));window.scrollTo(0,0)}
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{const v=b.dataset.v;if(v==='add'){view('home');$('txt').scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>$('txt').focus(),450)}else view(v)});
+const bind=(id,key,type)=>{const e=$(id);if(type==='chk'){e.checked=!!S[key];e.onchange=()=>{S[key]=e.checked;save();applyTheme();render()}}else{e.value=S[key];e.oninput=()=>{S[key]=type==='num'?+e.value:e.value;save();if(id==='vol')$('volv').textContent=Math.round(S.vol*100)+'%'}}};
+bind('dark','dark','chk');bind('chipsw','chips','chk');bind('chimesw','chime','chk');bind('vibsw','vib','chk');
+bind('vol','vol','num');bind('snz','snooze','num');bind('maxrep','maxrep','num');bind('gap','gap','num');bind('tpl','tpl');bind('risesw','rise','chk');bind('grpsw','group','chk');bind('zsel','zoom','num');$('zsel').addEventListener('change',()=>applyTheme());bind('hdsel','head','num');
+$('volv').textContent=Math.round(S.vol*100)+'%';
+$('exp').onclick=()=>{const j=JSON.stringify(S,null,1);if(CA){shareText('Comfy backup',j);toast('Send it to yourself by email or Drive');return}const b=new Blob([j],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='comfy-travel-backup.json';a.click();toast('Backup saved to your downloads')};
+$('imp').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{const x=JSON.parse(t);if(!Array.isArray(x.items))throw 0;S={...S,...x};save();location.reload()}catch(_){toast('That file is not a Comfy backup')}})};
+$('clr').onclick=()=>{const b4=JSON.stringify(S.items),n=S.items.filter(i=>i.status!=='active').length;S.items=S.items.filter(i=>i.status==='active');render();undo(n+' finished reminders cleared',b4)};
+$('rst').onclick=()=>{if(confirm('Delete all reminders and reset every setting?')){try{localStorage.removeItem('voyage_v1')}catch(e){}location.reload()}};
+
+function confetti(){const c=document.createElement('div');c.className='conf';const k=['#ffb547','#3dd6c3','#ff6f91','#7aa7ff','#fff'];
+  for(let i=0;i<36;i++){const p=document.createElement('i');p.style.cssText=`left:${Math.random()*100}%;background:${k[i%5]};animation-delay:${Math.random()*.4}s;animation-duration:${1.6+Math.random()*1.2}s`;c.appendChild(p)}
+  document.body.appendChild(c);setTimeout(()=>c.remove(),3200)}
+$('mlist').onclick=e=>{const b=e.target.closest('button');if(!b||!current)return;b.classList.toggle('got');if(navigator.vibrate)navigator.vibrate(12);
+  if(!$('mlist').querySelector('button:not(.got)')){const nm=who();$('mstop').click();setTimeout(()=>speak(`Wonderful ${nm}. Everything is packed. Safe travels!`),400)}};
+const TPL={Essentials:['Passport or ID','Wallet','Phone','Phone charger','House keys'],International:['Passport','Visa','Flight ticket','Foreign cash','Travel insurance','Power adapter'],Beach:['Swimwear','Sunscreen','Sunglasses','Beach towel','Flip-flops'],Business:['Business cards','Presentation','Formal wear','Work documents','Chargers']};
+$('tpls').onclick=e=>{const b=e.target.closest('button');if(!b)return;let n=0;
+  TPL[b.dataset.t].forEach(p=>{if(S.items.some(i=>i.status==='active'&&i.text.toLowerCase()===p.toLowerCase()))return;const id=Date.now().toString(36)+Math.random().toString(36).slice(2,5);S.items.push({id,text:p,cat:guess(p),when:new Date().toISOString(),rep:'once',armed:false,status:'active',fired:false});newId=id;n++});
+  S.filter='all';render();toast(n+' items added as drafts')};
+$('sws').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.accent=b.dataset.a;save();applyTheme()};
+const TIPS=['Photograph your passport and keep a copy in your email.','Charge your power bank the night before.','Put liquids in a clear bag for security checks.','Arrive three hours early for international flights.','Roll clothes instead of folding them to save space.','Keep a pen handy for arrival forms.','Tell your bank you are travelling.','Pack a spare phone cable in your hand luggage.','Check your passport has six months left.','Keep medicine in your hand luggage.','Download offline maps before you go.','Weigh your bag at home.'];
+$('tip').textContent='💡 '+TIPS[new Date().getDate()%TIPS.length];
+
+function markG(){document.querySelectorAll('#gseg button').forEach(b=>b.classList.toggle('on',b.dataset.g===S.gender))}
+$('gseg').onclick=e=>{const b=e.target.closest('button');if(!b)return;unlock();const g=b.dataset.g,m=voices.find(v=>g==='male'?isM(v):isF(v));
+  S.gender=g;if(m)S.voice=m.name;if(CA){const nm=NV.find(v=>g==='male'?isM(v):isF(v));if(nm)S.nativeVoice=nm.name}S.pitch=g==='male'?(m?0.95:0.75):1.15;S.rate=g==='male'?0.92:0.95;save();loadVoices();$('pitch').value=S.pitch;$('rate').value=S.rate;markG();
+  speak(`${greet()} ${who()}. This is how I will sound.`)};
+markG();
+/* ----- Tools ----- */
+const WX={0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',51:'🌦️',53:'🌦️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',71:'❄️',73:'❄️',75:'❄️',80:'🌦️',81:'🌧️',82:'⛈️',95:'⛈️',96:'⛈️',99:'⛈️'};
+async function weather(){const c=$('wcity').value.trim();if(!c)return;S.wcity=c;save();$('wout').textContent='Checking…';
+  try{const g=await(await fetch('https://geocoding-api.open-meteo.com/v1/search?count=1&name='+encodeURIComponent(c))).json(),r=g.results&&g.results[0];
+    if(!r){$('wout').textContent='I could not find that city.';return}
+    const w=await(await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${r.latitude}&longitude=${r.longitude}&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=4`)).json(),D=w.daily;
+    $('wout').innerHTML=`<div class="wnow"><span>${WX[w.current.weather_code]||'🌡️'}</span><div><b>${Math.round(w.current.temperature_2m)}°C</b><small>${esc(r.name)}, ${esc(r.country||'')}</small></div></div><div class="wdays">`+D.time.map((t,i)=>`<div class="wd"><small>${new Date(t+'T12:00').toLocaleDateString([],{weekday:'short'})}</small><span>${WX[D.weather_code[i]]||'🌡️'}</span><b>${Math.round(D.temperature_2m_max[i])}°</b><small>${Math.round(D.temperature_2m_min[i])}°</small></div>`).join('')+'</div>'+sug(D)}
+  catch(e){$('wout').textContent='No internet connection right now.'}}
+$('wgo').onclick=weather;$('wcity').onkeydown=e=>{if(e.key==='Enter')weather()};$('wcity').value=S.wcity||S.dest||'';
+const ZONES=[['Africa/Lagos','Lagos'],['Africa/Accra','Accra'],['Africa/Nairobi','Nairobi'],['Africa/Johannesburg','Johannesburg'],['Africa/Cairo','Cairo'],['Europe/London','London'],['Europe/Paris','Paris'],['Europe/Istanbul','Istanbul'],['Asia/Dubai','Dubai'],['Asia/Kolkata','Mumbai'],['Asia/Singapore','Singapore'],['Asia/Tokyo','Tokyo'],['Australia/Sydney','Sydney'],['America/New_York','New York'],['America/Toronto','Toronto'],['America/Los_Angeles','Los Angeles']];
+$('tz').innerHTML=ZONES.map(([z,n])=>`<option value="${z}">${n}</option>`).join('');$('tz').value=S.tz;
+function clockTick(){const z=$('tz').value,now=new Date(),mine=Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const off=t=>{try{const p=new Intl.DateTimeFormat('en-US',{timeZone:t,timeZoneName:'longOffset'}).formatToParts(now).find(x=>x.type==='timeZoneName').value,m=p.match(/([+-])(\d\d):?(\d\d)?/);return m?(m[1]==='-'?-1:1)*(+m[2]*60+(+m[3]||0)):0}catch(e){return 0}};
+  const d=(off(z)-off(mine))/60;
+  $('tzo').innerHTML=`<span class="big">${new Intl.DateTimeFormat([],{timeZone:z,hour:'numeric',minute:'2-digit',weekday:'short'}).format(now)}</span><small>${d===0?'Same time as you':Math.abs(d)+' hour'+(Math.abs(d)===1?'':'s')+(d>0?' ahead of you':' behind you')}</small>`}
+$('tz').onchange=()=>{S.tz=$('tz').value;save();clockTick()};clockTick();setInterval(clockTick,20000);
+const fm=x=>x.toLocaleString(undefined,{maximumFractionDigits:2});
+function conv(){S.cfrom=$('cfrom').value;S.cto=$('cto').value;S.crate=$('crt').value;save();const a=+$('cam').value,r=+$('crt').value;
+  $('cout').innerHTML=a&&r?`<span class="big">${fm(a*r)} ${esc($('cto').value.toUpperCase())}</span><small>${fm(a)} ${esc($('cfrom').value.toUpperCase())} at a rate of ${+r.toFixed(6)}</small>`:''}
+['cfrom','cto','cam','crt'].forEach(id=>$(id).oninput=conv);$('cfrom').value=S.cfrom;$('cto').value=S.cto;$('crt').value=S.crate||'';conv();
+$('clive').onclick=async()=>{const f=$('cfrom').value.trim().toUpperCase(),t=$('cto').value.trim().toUpperCase();if(f.length!==3||t.length!==3){toast('Enter two 3-letter currency codes');return}
+  try{const r=await(await fetch('https://open.er-api.com/v6/latest/'+f)).json(),x=r.rates&&r.rates[t];if(!x)throw 0;$('crt').value=+x.toFixed(6);conv()}catch(e){toast('No live rate right now. Type the rate yourself')}};
+function bagsRender(){const t=S.bags.reduce((a,b)=>a+b.kg,0),l=+S.lim||23,p=Math.min(100,t/l*100);
+  $('bagl').innerHTML=S.bags.map((b,i)=>`<div class="li"><span>${esc(b.n)}</span><b>${b.kg} kg</b><button data-bd="${i}" aria-label="Remove">✕</button></div>`).join('');
+  $('bagbar').style.width=p+'%';$('bagbar').style.background=t>l?'var(--rose)':p>85?'var(--amber)':'var(--teal)';
+  $('bagt').textContent=S.bags.length?`${+t.toFixed(1)} of ${l} kg · ${t>l?'over by '+(+(t-l).toFixed(1))+' kg':(+(l-t).toFixed(1))+' kg left'}`:''}
+$('lim').value=S.lim;$('lim').oninput=()=>{S.lim=$('lim').value;save();bagsRender()};
+$('bad').onclick=()=>{const k=+$('bagk').value;if(!k)return;S.bags.push({n:$('bagn').value.trim()||'Bag',kg:k});$('bagn').value=$('bagk').value='';save();bagsRender()};
+$('bagl').onclick=e=>{const i=e.target.dataset.bd;if(i==null)return;S.bags.splice(i,1);save();bagsRender()};bagsRender();
+function expRender(){const t=S.exp.reduce((a,b)=>a+b.v,0),b=+S.bud||0,p=b?Math.min(100,t/b*100):0;
+  $('expl').innerHTML=S.exp.map((x,i)=>`<div class="li"><span>${esc(x.n)}</span><b>${fm(x.v)}</b><button data-ed="${i}" aria-label="Remove">✕</button></div>`).join('');
+  $('expbar').style.width=p+'%';$('expbar').style.background=b&&t>b?'var(--rose)':p>85?'var(--amber)':'var(--teal)';
+  $('expt').textContent=b?`Spent ${fm(t)} of ${fm(b)} · ${t>b?'over by '+fm(t-b):fm(b-t)+' left'}`:(t?`Spent ${fm(t)}. Set a budget to track it.`:'')}
+$('bud').value=S.bud;$('bud').oninput=()=>{S.bud=$('bud').value;save();expRender()};
+$('ead').onclick=()=>{const v=+$('ev').value;if(!v)return;S.exp.push({n:$('en').value.trim()||'Expense',v});$('en').value=$('ev').value='';save();expRender()};
+$('expl').onclick=e=>{const i=e.target.dataset.ed;if(i==null)return;S.exp.splice(i,1);save();expRender()};expRender();
+/* ----- Trip ----- */
+const DOCS=['Passport valid for 6+ months','Visa or entry permit','Flight tickets','Hotel booking','Travel insurance','Vaccination card','Local currency or bank card','Phone and power bank charged'];
+function docsRender(){const d=S.docs||{};$('docs').innerHTML=DOCS.map((t,i)=>`<label class="ck"><input type="checkbox" data-d="${i}" ${d[i]?'checked':''}>${t}</label>`).join('');
+  const n=DOCS.filter((_,i)=>d[i]).length,p=Math.round(n/DOCS.length*100);$('rpc').textContent=p+'%';
+  $('ring').style.background=`conic-gradient(var(--teal) ${p*3.6}deg,rgba(127,127,127,.25) 0)`;
+  $('rtx').textContent=p===100?'You are fully ready. Safe travels!':`${DOCS.length-n} thing${DOCS.length-n>1?'s':''} left to sort.`}
+$('docs').onchange=e=>{const i=e.target.dataset.d;if(i==null)return;S.docs[i]=e.target.checked;save();docsRender();if(DOCS.every((_,k)=>S.docs[k]))confetti()};docsRender();
+document.querySelectorAll('[data-tk]').forEach(e=>{e.value=S.trip[e.dataset.tk]||'';e.oninput=()=>{S.trip[e.dataset.tk]=e.value;save();pexpRender()}});pexpRender();
+$('tshare').onclick=()=>{const T=S.trip,L=[['Flight',T.fl],['From',T.ap],['Hotel',T.ht],['Address',T.ha],['Booking ref',T.br],['Emergency contact',T.ec],['Notes',T.nt]].filter(x=>x[1]).map(x=>x.join(': ')),it=S.items.filter(i=>i.status!=='cancelled').map(i=>'• '+i.text);
+  const t='✈️ My trip'+(S.dest?' to '+S.dest:'')+(S.dep?' · '+new Date(S.dep).toLocaleString([],{dateStyle:'medium',timeStyle:'short'}):'')+'\n'+L.join('\n')+(it.length?'\n\nPacking list:\n'+it.join('\n'):'');
+  shareText('My trip',t)};
+const EN=['Hello','Thank you','Please','Excuse me','How much is this?','Where is the toilet?','I need help','Water, please'];
+const LANGS=[['French','fr-FR',['Bonjour','Merci',"S'il vous plaît",'Excusez-moi','Combien ça coûte ?','Où sont les toilettes ?',"J'ai besoin d'aide","De l'eau, s'il vous plaît"]],
+ ['Spanish','es-ES',['Hola','Gracias','Por favor','Disculpe','¿Cuánto cuesta esto?','¿Dónde está el baño?','Necesito ayuda','Agua, por favor']],
+ ['Arabic','ar-SA',['مرحبا','شكرا','من فضلك','عفوا','بكم هذا؟','أين الحمام؟','أحتاج إلى مساعدة','ماء من فضلك']],
+ ['Portuguese','pt-PT',['Olá','Obrigado','Por favor','Com licença','Quanto custa isto?','Onde fica a casa de banho?','Preciso de ajuda','Água, por favor']],
+ ['Turkish','tr-TR',['Merhaba','Teşekkür ederim','Lütfen','Affedersiniz','Bu ne kadar?','Tuvalet nerede?','Yardıma ihtiyacım var','Su lütfen']],
+ ['Chinese','zh-CN',['你好','谢谢','请','对不起','这个多少钱？','洗手间在哪里？','我需要帮助','请给我水']]];
+$('pl').innerHTML=LANGS.map((l,i)=>`<option value="${i}">${l[0]}</option>`).join('');
+function phr(){const L=LANGS[+$('pl').value];$('phr').innerHTML=L[2].map((t,i)=>`<button class="phb" data-i="${i}"><div><b>${esc(t)}</b><small>${EN[i]}</small></div>🔊</button>`).join('')}
+$('pl').onchange=phr;phr();
+$('phr').onclick=e=>{const b=e.target.closest('.phb');if(!b||!('speechSynthesis' in window))return;unlock();const L=LANGS[+$('pl').value],t=L[2][+b.dataset.i];
+  speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang=L[1];const v=speechSynthesis.getVoices().find(v=>v.lang.replace('_','-').toLowerCase().startsWith(L[1].slice(0,2)));
+  if(v)u.voice=v;else toast('No '+L[0]+' voice on this phone, so it may sound off');u.volume=+S.vol;u.rate=.9;speechSynthesis.speak(u)};
+function tipc(){const b=+$('tb').value,p=+$('tp').value,n=Math.max(1,+$('tn').value||1);$('tout').innerHTML=b?`<span class="big">${fm(b*(1+p/100)/n)}</span><small>per person · tip ${fm(b*p/100)} · total ${fm(b*(1+p/100))}</small>`:''}
+['tb','tp','tn'].forEach(id=>$(id).oninput=tipc);
+
+let sheetTimes=[];
+const tf=x=>new Date(x).toLocaleString([],{weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'});
+function renderTimes(){$('tlist').innerHTML=sheetTimes.map((x,i)=>`<div class="tm"><span>🔔 ${tf(x)}</span><button data-x="${i}" aria-label="Remove time">✕</button></div>`).join('')||'<small>Pick a date and time above, then tap “Add this time”. Add as many as you like.</small>'}
+$('addt').onclick=()=>{const w=new Date($('d').value+'T'+$('t').value);if(isNaN(w)){toast('Choose a date and time');return}const x=w.toISOString();if(!sheetTimes.includes(x))sheetTimes.push(x);sheetTimes.sort();renderTimes();if(navigator.vibrate)navigator.vibrate(12)};
+$('tlist').onclick=e=>{const i=e.target.dataset.x;if(i==null)return;sheetTimes.splice(i,1);renderTimes()};
+$('smart').onclick=()=>{if(!S.dep){toast('Set your departure time in Settings first');return}
+  const dep=new Date(S.dep),a=new Date(dep);a.setDate(a.getDate()-1);a.setHours(20,0,0,0);const b=new Date(dep);b.setHours(6,0,0,0);const c=new Date(dep.getTime()-3*36e5);
+  const T=[a,b,c].filter(x=>x>Date.now()&&x<dep).map(x=>x.toISOString());if(!T.length){toast('Those times have already passed');return}
+  sheetTimes=[...new Set([...sheetTimes,...T])].sort();renderTimes();toast(T.length+' times added: night before, morning, 3 hours before')};
+$('hear').onclick=()=>{unlock();const L=S.items.filter(i=>i.status==='active'&&!i.armed).sort((a,b)=>(b.star?1:0)-(a.star?1:0));if(!L.length){toast('Add some items first');return}speak(fill(S.tpl,joinList(L.map(i=>i.text))))};
+function histRender(){const L=S.log||[];$('hist').innerHTML=L.length?L.slice(0,8).map(x=>`<div class="li"><span>${esc(x.items.join(', '))}<br><small>${tf(x.t)}</small></span><b>${x.how}</b></div>`).join(''):'<p class="note">Nothing yet. Your reminders will be listed here.</p>'}
+function burst(el){const r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;for(let i=0;i<10;i++){const p=document.createElement('i'),a=i/10*6.283,m=30+Math.random()*30;p.className='spk';p.style.cssText=`left:${cx}px;top:${cy}px;--dx:${Math.cos(a)*m}px;--dy:${Math.sin(a)*m}px;background:${['#ffb547','#3dd6c3','#ff6f91'][i%3]}`;document.body.appendChild(p);setTimeout(()=>p.remove(),700)}}
+function armedFx(){const d=document.createElement('div');d.className='fx';d.innerHTML='<svg viewBox="0 0 80 80" width="110" height="110"><circle cx="40" cy="40" r="34" fill="none" stroke="#3dd6c3" stroke-width="5"/><path d="M24 41l11 11 21-24" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg><p>Reminders are ON</p>';document.body.appendChild(d);setTimeout(()=>d.remove(),1800)}
+function countUp(){document.querySelectorAll('.gl b').forEach((b,i)=>{const raw=b.textContent,n=parseFloat(raw);if(isNaN(n)||window['g'+i]===raw)return;window['g'+i]=raw;const pc=raw.includes('%'),t0=performance.now();(function f(t){const p=Math.min(1,(t-t0)/700);b.textContent=Math.round(n*(1-Math.pow(1-p,3)))+(pc?'%':'');if(p<1)requestAnimationFrame(f)})(t0)})}
+
+function syncNative(){if(!CA)return;const m=new Map();
+  S.items.forEach(i=>{if(i.status!=='active'||!i.armed)return;[i.when,...(i.later||[])].forEach(t=>{const k=new Date(t).getTime();if(k>Date.now()+3000){if(!m.has(k))m.set(k,[]);m.get(k).push(i)}})});
+  const alarms=[...m.entries()].sort((a,b)=>a[0]-b[0]).map(([k,L])=>{L.sort((a,b)=>(b.star?1:0)-(a.star?1:0));const names=joinList([...new Set(L.map(i=>i.text))]),st=L.filter(i=>i.star),imp=st.length&&st.length<L.length?' Most important of all: '+joinList(st.map(i=>i.text))+'.':'';
+    return{id:Math.floor(k/1000)%2000000000,at:k,first:fill(S.tpl,names,new Date(k))+imp,again:"I repeat. Don't forget to take the "+names+"."+imp}});
+  CA.scheduleAll({alarms,cfg:{pitch:+S.pitch,rate:+S.rate,vol:+S.vol,gap:+S.gap||1000,maxrep:+S.maxrep||0,rise:S.rise?1:0,chime:S.chime?1:0,voice:S.nativeVoice||''}}).catch(()=>{})}
+function pullFired(){if(!CA)return;CA.consumeFired().then(r=>{const F=(r&&r.fired)||[];if(!F.length)return;
+  F.sort((a,b)=>a.at-b.at).forEach(f=>{const L=S.items.filter(c=>c.status==='active'&&c.armed&&ts(c)===f.at);if(!L.length)return;
+    S.log=[{t:f.at,items:L.map(c=>c.text),how:f.stopped?'Stopped':'Played'},...(S.log||[])].slice(0,30);
+    if(current&&current.some(c=>L.includes(c)))closeAlarm();
+    L.forEach(advance)});
+  save();render()}).catch(()=>{})}
+function exactGuide(){if(!CA)return;CA.canExact().then(r=>{if(r&&r.exact===false&&!S.exactAsked){S.exactAsked=true;save();if(confirm('For reminders to ring at the exact minute, Android needs the "Alarms & reminders" permission. Open that setting now and turn it on for Comfy?'))CA.openExact().catch(()=>{})}}).catch(()=>{})}
+if(CA){
+  $('tip2').textContent='Comfy will remind you out loud even when the app is closed. Keep your phone volume up.';
+  $('notif').onclick=()=>{CA.askNotifications().then(()=>toast('If your phone asks, tap Allow')).catch(()=>{})};
+  $('ntest').onclick=()=>{syncNative();CA.testNow({first:fill(S.tpl,'passport and tickets'),again:"I repeat. Don't forget to take the passport and tickets."}).then(()=>toast('Playing now. Use Stop in the notification')).catch(()=>toast('Could not start the voice'))};
+  $('nbat').onclick=()=>CA.openBatterySettings();
+  $('nexact').onclick=()=>CA.openExact().catch(()=>{});
+  CA.getVoices().then(r=>{NV=(r.voices||[]).filter(v=>/^en/i.test(v.lang)).sort((a,b)=>gm(b)-gm(a));loadVoices()}).catch(()=>{});
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)pullFired()});
+  pullFired();syncNative();
+}
+
+function shareText(title,t){if(CA){CA.share({title,text:t});return}if(navigator.share){navigator.share({title,text:t}).catch(()=>{});return}try{navigator.clipboard.writeText(t)}catch(e){}toast('Copied to your clipboard')}
+function addDraft(p){if(S.items.some(i=>i.status==='active'&&i.text.toLowerCase()===p.toLowerCase()))return;const id=Date.now().toString(36)+Math.random().toString(36).slice(2,5);S.items.push({id,text:p,cat:guess(p),when:new Date().toISOString(),rep:'once',armed:false,status:'active',fired:false});newId=id;S.filter='all';save();render()}
+function sug(D){const mx=Math.max(...D.temperature_2m_max),mn=Math.min(...D.temperature_2m_min),rain=D.weather_code.some(c=>(c>=51&&c<=82)||c>=95),L=[];
+  if(mn<14)L.push('Warm jacket','Scarf');if(mx>=29)L.push('Sunscreen','Sunglasses','Light clothes');if(rain)L.push('Umbrella','Raincoat');
+  return L.length?`<div class="sug"><small>Tap to add to your list as drafts:</small>${L.map(x=>`<button class="chip" data-sug="${x}">${x}</button>`).join('')}</div>`:''}
+$('wout').onclick=e=>{const b=e.target.closest('[data-sug]');if(!b)return;addDraft(b.dataset.sug);b.remove();toast('Added to your drafts')};
+function pexpRender(){const v=S.trip.pe;if(!v){$('pexp').textContent='';return}const e=new Date(v+'T00:00'),ref=S.dep?new Date(S.dep):new Date(),need=new Date(ref);need.setMonth(need.getMonth()+6);const f=e.toLocaleDateString([],{dateStyle:'medium'});
+  $('pexp').textContent=e<ref?'⚠️ Your passport expires before your trip.':e<need?'⚠️ Many countries want 6 months left. Yours ends '+f+', less than 6 months after you leave.':'✅ Your passport is valid for this trip (until '+f+').'}
+$('ecall').onclick=()=>{const m=(S.trip.ec||'').match(/[+\d][\d\s().-]{5,}/);if(!m){toast('Add a phone number in the emergency contact');return}location.href='tel:'+m[0].replace(/[^\d+]/g,'')};
+$('hmap').onclick=()=>{const q=[S.trip.ht,S.trip.ha].filter(Boolean).join(', ');if(!q){toast('Add the hotel name or address');return}const u='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q);if(CA)location.href=u;else window.open(u,'_blank')};
+function leaveRender(){const L=S.items.filter(i=>i.status!=='cancelled'&&i.status!=='done'),open=L.filter(i=>!i.packed);
+  $('llist').innerHTML=L.map(i=>`<button class="${i.packed?'got':''}" data-l="${i.id}">${CATS[i.cat]||'🧳'} ${esc(i.text)}</button>`).join('')||'<small>Your list is empty.</small>';
+  $('lp').textContent=L.length?(open.length?open.length+' left to check. Tap each item as you see it.':'Everything is checked. Safe travels!'):'Add some items first.'}
+$('lbtn').onclick=()=>{unlock();leaveRender();$('leave').classList.add('show')};
+$('lx').onclick=()=>{try{speechSynthesis.cancel()}catch(e){}$('leave').classList.remove('show');render()};
+$('llist').onclick=e=>{const b=e.target.closest('[data-l]');if(!b)return;const it=get(b.dataset.l);it.packed=!it.packed;save();leaveRender();if(navigator.vibrate)navigator.vibrate(12);
+  if(!S.items.some(i=>i.status!=='cancelled'&&i.status!=='done'&&!i.packed)){confetti();speak(`Wonderful ${who()}. Everything is checked. Safe travels!`)}};
+$('lread').onclick=()=>{const L=S.items.filter(i=>i.status!=='cancelled'&&i.status!=='done'&&!i.packed);speak(L.length?`${greet()} ${who()}, before you leave, check the ${joinList(L.map(i=>i.text))}.`:`Everything is checked, ${who()}. Safe travels!`)};
+$('imp').closest('label').addEventListener('click',e=>{if(!CA)return;e.preventDefault();const t=prompt('Paste your backup text here');if(!t)return;try{const x=JSON.parse(t);if(!Array.isArray(x.items))throw 0;S={...S,...x};save();location.reload()}catch(_){toast('That is not a Comfy backup')}});
+window.__back=()=>{const m=[...document.querySelectorAll('.modal.show')].filter(x=>x.id!=='modal');if(m.length){m[m.length-1].classList.remove('show');return true}if(document.body.dataset.view&&document.body.dataset.view!=='home'){view('home');return true}return false};
+window.__resume=()=>{try{pullFired();check();syncNative()}catch(e){}};
+
+const UNITS=[['Kilometres and miles',1.609344,'km','mi'],['Celsius and Fahrenheit','t','°C','°F'],['Kilograms and pounds',0.45359237,'kg','lb'],['Centimetres and inches',2.54,'cm','in'],['Litres and US gallons',3.785411784,'L','gal']];
+let udir=0;$('ut').innerHTML=UNITS.map((u,i)=>`<option value="${i}">${u[0]}</option>`).join('');
+function uconv(){const u=UNITS[+$('ut').value],v=parseFloat($('uv').value);if(isNaN(v)){$('uo').textContent='';return}const a=udir?u[3]:u[2],b=udir?u[2]:u[3];
+  const r=u[1]==='t'?(udir?(v-32)*5/9:v*9/5+32):(udir?v*u[1]:v/u[1]);$('uo').innerHTML=`<span class="big">${fm(r)} ${b}</span><small>${fm(v)} ${a}</small>`}
+$('ut').onchange=uconv;$('uv').oninput=uconv;$('usw').onclick=()=>{udir=udir?0:1;uconv();toast(udir?'Now converting the second unit to the first':'Now converting the first unit to the second')};
+function itRender(){const L=[...(S.itin||[])].sort((a,b)=>a.t.localeCompare(b.t));
+  $('itl').innerHTML=L.map(x=>{const d=new Date(x.t),past=d<Date.now();return `<div class="li" style="${past?'opacity:.5':''}"><span>${esc(x.n)}<br><small>${d.toLocaleString([],{weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})}${past?'':' · in '+human(d-Date.now())}</small></span><button data-id="${x.id}" aria-label="Remove">✕</button></div>`}).join('')||'<p class="note">Add your flights, check-ins and tours.</p>'}
+$('ita').onclick=()=>{const n=$('itt').value.trim(),t=$('itd').value;if(!n||!t){toast('Type a title and pick a date and time');return}S.itin.push({id:Date.now().toString(36),n,t});$('itt').value='';save();itRender()};
+$('itl').onclick=e=>{const id=e.target.dataset.id;if(!id)return;S.itin=S.itin.filter(x=>x.id!==id);save();itRender()};itRender();setInterval(itRender,60000);
+function myTplRender(){$('mytpls').innerHTML=(S.mytpls||[]).map((t,i)=>`<button data-u="${i}">⭐ ${esc(t.n)}</button>`).join('')}
+$('savetpl').onclick=()=>{const L=S.items.filter(i=>i.status!=='cancelled').map(i=>i.text);if(!L.length){toast('Add some items first');return}const n=prompt('Name this template (for example: Weekend trip)');if(!n||!n.trim())return;S.mytpls=[...(S.mytpls||[]),{n:n.trim().slice(0,24),items:[...new Set(L)]}];save();myTplRender();toast('Template saved')};
+$('mytpls').onclick=e=>{const b=e.target.closest('button');if(!b)return;const t=S.mytpls[+b.dataset.u];if(!t)return;let n=0;t.items.forEach(p=>{const c=S.items.length;addDraft(p);if(S.items.length>c)n++});toast(n+' items added as drafts')};
+$('clrtpl').onclick=()=>{if(!(S.mytpls||[]).length){toast('You have no saved templates');return}if(confirm('Delete all your saved templates?')){S.mytpls=[];save();myTplRender()}};myTplRender();
+$('lun').onclick=()=>{S.items.forEach(i=>{if(i.status!=='cancelled')i.packed=false});save();leaveRender()};
+window.__go=w=>{view('home');if(w==='leave')$('lbtn').click();else if(w==='add'){$('txt').scrollIntoView({block:'center'});$('txt').focus()}};
+let dip=null,wl=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dip=e;$('install').style.display='block'});
+$('install').onclick=()=>{if(dip){dip.prompt();dip=null;$('install').style.display='none'}};
+window.addEventListener('appinstalled',()=>{$('install').style.display='none';toast('Installed. Find Comfy Travel Assistant on your home screen')});
+async function keepAwake(){try{wl=await navigator.wakeLock.request('screen');wl.onrelease=()=>{};return true}catch(e){return false}}
+$('wake').onclick=async()=>{unlock();if(!('wakeLock' in navigator)){toast('Not supported on this browser');return}
+  if(wl&&!wl.released){wl.release();wl=null;toast('Screen can sleep again');return}
+  toast(await keepAwake()?'Screen will stay awake while this app is open':'Could not keep screen awake')};
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&wl&&wl.released)keepAwake()});
+if('serviceWorker' in navigator&&location.protocol!=='file:'&&!CA)navigator.serviceWorker.register('sw.js').catch(()=>{});
+applyTheme();defaults();render();countdown();check();
+setInterval(check,1000);window.addEventListener('focus',check);window.addEventListener('pageshow',check);setInterval(countdown,30000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)check()});
+</script>
+</body>
+</html>

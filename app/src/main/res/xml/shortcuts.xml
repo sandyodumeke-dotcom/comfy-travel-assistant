@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="leave"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutShortLabel="@string/sc_leave_short"
+        android:shortcutLongLabel="@string/sc_leave_long">
+        <intent
+            android:action="com.comfy.travelassistant.LEAVE"
+            android:targetPackage="com.comfy.travelassistant"
+            android:targetClass="com.comfy.travelassistant.MainActivity" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="add"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutShortLabel="@string/sc_add_short"
+        android:shortcutLongLabel="@string/sc_add_long">
+        <intent
+            android:action="com.comfy.travelassistant.ADD"
+            android:targetPackage="com.comfy.travelassistant"
+            android:targetClass="com.comfy.travelassistant.MainActivity" />
+    </shortcut>
+</shortcuts>
