@@ -1,3 +1,4 @@
+
 name: Build Comfy Travel Assistant APK
 
 on:
@@ -12,16 +13,17 @@ jobs:
   build-apk:
     runs-on: ubuntu-latest
     timeout-minutes: 45
+
     steps:
       - name: Check out the project
         uses: actions/checkout@v4
 
-      - name: Check the project files are in the right place
+      - name: Check project files
         run: |
           missing=0
           for f in settings.gradle build.gradle gradle.properties gradle/wrapper/gradle-wrapper.properties app/build.gradle app/src/main/AndroidManifest.xml app/src/main/assets/index.html; do
             if [ ! -f "$f" ]; then
-              echo "::error::Missing file: $f. Upload the CONTENTS of the project folder to the top level of the repository."
+              echo "::error::Missing file: $f"
               missing=1
             fi
           done
@@ -33,52 +35,68 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Set up the Android SDK
+      - name: Set up Android SDK
         uses: android-actions/setup-android@v3
-      - name: Accept Andriod licence SDK Lincences
-        run: yes | sdkmanager --licences
 
-      - name: Pre-install Android SDK packages
-        continue-on-error: true
-        run: sdkmanager "platforms;android-36" "build-tools;35.0.0"
+      - name: Accept Android SDK licences
+        run: yes | sdkmanager --licenses || true
+
+      - name: Install Android SDK packages
+        run: |
+          sdkmanager "platforms;android-36" "build-tools;35.0.0"
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: 8.11.1
 
-      - name: Prepare the Gradle wrapper
+      - name: Prepare Gradle wrapper
         run: |
           if [ ! -f gradle/wrapper/gradle-wrapper.jar ]; then
-            echo "gradle-wrapper.jar is not in the project, creating it with the official Gradle command"
+            echo "Generating Gradle wrapper"
             mkdir -p /tmp/wrapgen
             cd /tmp/wrapgen
             touch settings.gradle
             gradle wrapper --gradle-version 8.11.1
             cd "$GITHUB_WORKSPACE"
             mkdir -p gradle/wrapper
-            cp /tmp/wrapgen/gradle/wrapper/gradle-wrapper.jar gradle/wrapper/gradle-wrapper.jar
-            cp /tmp/wrapgen/gradlew /tmp/wrapgen/gradlew.bat .
+            cp /tmp/wrapgen/gradle/wrapper/gradle-wrapper.jar gradle/wrapper/
+            cp /tmp/wrapgen/gradlew .
+            cp /tmp/wrapgen/gradlew.bat .
           fi
+
           chmod +x gradlew
           ./gradlew --version
 
-      - name: Build the APK
+      - name: Build APK
         run: ./gradlew assembleDebug --stacktrace --no-daemon
 
-      - name: Check the APK
+      - name: Check APK
         run: |
           APK=$(find app/build/outputs/apk/debug -name '*.apk' | head -n 1)
-          if [ -z "$APK" ]; then echo "::error::No APK was produced"; exit 1; fi
+
+          if [ -z "$APK" ]; then
+            echo "::error::No APK was produced"
+            exit 1
+          fi
+
           mkdir -p dist
           cp "$APK" dist/Comfy-Travel-Assistant.apk
-          AAPT=$(ls "$ANDROID_HOME"/build-tools/*/aapt2 | sort -V | tail -n 1)
-          "$AAPT" dump badging dist/Comfy-Travel-Assistant.apk | grep -E "^package:|^sdkVersion|^targetSdkVersion|^application-label:" || true
-          MIN=$("$AAPT" dump badging dist/Comfy-Travel-Assistant.apk | sed -n "s/^sdkVersion:'\([0-9]*\)'.*/\1/p")
-          echo "Minimum Android version (API level): $MIN"
-          if [ -z "$MIN" ] || [ "$MIN" -gt 26 ]; then echo "::error::The APK does not support Android 8.0 (API 26)"; exit 1; fi
 
-      - name: Upload the APK
+          AAPT=$(ls "$ANDROID_HOME"/build-tools/*/aapt2 | sort -V | tail -n 1)
+
+          "$AAPT" dump badging dist/Comfy-Travel-Assistant.apk
+
+          MIN=$("$AAPT" dump badging dist/Comfy-Travel-Assistant.apk | sed -n "s/^sdkVersion:'\([0-9]*\)'.*/\1/p")
+
+          echo "Minimum Android API: $MIN"
+
+          if [ -z "$MIN" ] || [ "$MIN" -gt 26 ]; then
+            echo "::error::APK does not support Android 8.0 (API 26)"
+            exit 1
+          fi
+
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Comfy-Travel-Assistant-APK
@@ -86,7 +104,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-      - name: Upload build reports (only if the build failed)
+      - name: Upload build reports
         if: failure()
         uses: actions/upload-artifact@v4
         with:
