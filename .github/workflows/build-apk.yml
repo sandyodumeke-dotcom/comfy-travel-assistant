@@ -59,19 +59,27 @@ jobs:
         with:
           packages: 'platform-tools'
 
-      # 5. Accept Android SDK licenses
+      # 5. Accept Android SDK licenses (FIXED)
       - name: Accept Android SDK licenses
         shell: bash
         run: |
           set -e
-          set -o pipefail
 
+          set +e
           yes | sdkmanager --licenses
+          SDK_STATUS=${PIPESTATUS[1]}
+          set -e
+
+          if [ "$SDK_STATUS" -ne 0 ]; then
+            echo "::error::Android SDK license acceptance failed."
+            exit "$SDK_STATUS"
+          fi
 
           echo "Android SDK licenses accepted."
 
       # 6. Install required Android packages
       - name: Install Android SDK packages
+        shell: bash
         run: |
           set -e
 
